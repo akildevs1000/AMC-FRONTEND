@@ -184,50 +184,50 @@ export default {
       ],
 
       items: [
-        {
-          icon: "mdi-home",
-          title: "Home",
-          to: "/master",
-          permission: this.can("/"),
-        },
-        {
-          icon: "mdi-domain",
-          title: "Companies",
-          to: "/master/companies",
-          permission: this.can("company_access"),
-        },
+        // {
+        //   icon: "mdi-home",
+        //   title: "Home",
+        //   to: "/master",
+        //   permission: this.can("/"),
+        // },
+        // {
+        //   icon: "mdi-domain",
+        //   title: "Companies",
+        //   to: "/master/companies",
+        //   permission: this.can("company_access"),
+        // },
         {
           icon: "mdi-account-multiple",
-          title: "Communities",
-          to: "/master/communities",
+          title: "Masters",
+          to: "/master/masters",
           permission: this.can("company_access"),
         },
-        {
-          icon: "mdi-login-variant",
-          title: "Logs",
-          to: "/master/web_login_logs",
-          permission: this.can("master"),
-        },
-        {
-          icon: "mdi-apps",
-          title: "Module",
-          open_menu: false,
-          permission: this.can("module_access"),
-          hasChildren: [
-            {
-              icon: "mdi-chart-bubble",
-              title: "Module",
-              to: "/master/module",
-              permission: this.can("module_access"),
-            },
-            {
-              icon: "mdi-chart-bubble",
-              title: "Assign Modules",
-              to: "/master/assign_module",
-              permission: this.can("assign_module_access"),
-            },
-          ],
-        },
+        // {
+        //   icon: "mdi-login-variant",
+        //   title: "Logs",
+        //   to: "/master/web_login_logs",
+        //   permission: this.can("master"),
+        // },
+        // {
+        //   icon: "mdi-apps",
+        //   title: "Module",
+        //   open_menu: false,
+        //   permission: this.can("module_access"),
+        //   hasChildren: [
+        //     {
+        //       icon: "mdi-chart-bubble",
+        //       title: "Module",
+        //       to: "/master/module",
+        //       permission: this.can("module_access"),
+        //     },
+        //     {
+        //       icon: "mdi-chart-bubble",
+        //       title: "Assign Modules",
+        //       to: "/master/assign_module",
+        //       permission: this.can("assign_module_access"),
+        //     },
+        //   ],
+        // },
 
         // {
         //   icon: "mdi-account",

@@ -11,6 +11,7 @@ export const state = () => ({
   branch_id: "",
 
   devices: null,
+  tickets: null,
   employees: null,
   employees_with_document_expiry: null,
   access_control_report: null,
@@ -49,6 +50,7 @@ export const mutations = {
       branch_id: "",
       devices: null,
       employees: null,
+      tickets: null,
       employees_with_document_expiry: null,
       access_control_report: null,
       employeeList: null,
@@ -86,6 +88,9 @@ export const mutations = {
   },
   employees(state, value) {
     state.employees = value;
+  },
+  tickets(state, value) {
+    state.tickets = value;
   },
   employees_with_document_expiry(state, value) {
     state.employees_with_document_expiry = value;
@@ -195,7 +200,7 @@ export const actions = {
       const { data } = await this.$axios.get(endpoint, configs);
       console.log(`Fetching ${key}:`, data);
 
-      commit(key, data);
+      // commit(key, data);
       return data;
     } catch (error) {
       console.error(`Error fetching ${key}:`, error);

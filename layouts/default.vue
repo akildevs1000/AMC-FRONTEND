@@ -550,6 +550,10 @@ export default {
           elevation: 0,
           selected: "",
         },
+        companies: {
+          elevation: 0,
+          selected: "",
+        },
       },
 
       topMenu_Selected: "dashboard",
