@@ -23,8 +23,8 @@
           >
             <v-row>
               <v-col cols="6">
-                <b>{{ index + 1 }}. {{ item.title }}</b>
-                <div>{{ item.comments }}</div>
+                <b>{{ item.title }}</b>
+                <div>{{ item.comments || "---" }}</div>
                 <div>User: {{ item?.user?.email }}</div>
               </v-col>
               <v-col class="text-right" cols="6"> {{ item.dateTime }} </v-col>

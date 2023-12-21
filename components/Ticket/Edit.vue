@@ -234,8 +234,10 @@ export default {
       payload.append("status", this.payload.status);
       payload.append("description", this.payload.description);
       payload.append("user_id", this.$auth.user.id);
-      payload.append("comments", this.payload.comments);
 
+      if (this.payload.comments) {
+        payload.append("comments", this.payload.comments);
+      }
 
       if (this.upload.name) {
         payload.append("attachment", this.upload.name);

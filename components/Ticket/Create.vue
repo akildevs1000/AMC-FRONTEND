@@ -8,7 +8,6 @@
           dense
           small
           class="primary"
-          text
           title="Create Community"
         >
           Create Ticket

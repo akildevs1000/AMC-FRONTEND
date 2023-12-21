@@ -121,15 +121,7 @@
       <v-spacer></v-spacer>
 
       <span style="100%">
-        <template
-          v-if="
-            getLoginType == 'company' ||
-            getLoginType == 'branch' ||
-            (getLoginType == 'employee' &&
-              $auth.user.role.role_type.toLowerCase() != 'guard' &&
-              $auth.user.role.role_type.toLowerCase() != 'host')
-          "
-        >
+        <template>
           <v-row align="center" justify="space-around" class="">
             <v-col v-for="(items, index) in company_top_menu" :key="index">
               <v-btn
@@ -185,22 +177,6 @@
                 >
               </v-list-item-content>
             </v-list-item>
-            <v-list-item
-              v-if="$auth.user.user_type != 'company'"
-              @click="changeLoginType()"
-            >
-              <v-list-item-icon>
-                <v-icon>mdi-account-multiple-outline</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title class="black--text">
-                  Login Into employee
-                  <!-- {{
-                    caps(getLoginType == "branch" ? "employee" : "branch")
-                  }} -->
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
 
             <v-list-item @click="logout">
               <v-list-item-icon>
@@ -216,7 +192,7 @@
         </v-list>
       </v-menu>
 
-      <v-btn
+      <!-- <v-btn
         v-if="getLoginType == 'company' || getLoginType == 'branch'"
         icon
         plan
@@ -225,7 +201,7 @@
         ><v-icon class="violet--text" style="text-align: center"
           >mdi-settings</v-icon
         ></v-btn
-      >
+      > -->
 
       <v-menu
         bottom
@@ -236,7 +212,7 @@
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon dark v-bind="attrs" v-on="on">
             <v-badge
-              :color="pendingNotificationsCount > 0 ? 'red' : 'red'"
+              :color="pendingNotificationsCount > 0 ? 'red' : ''"
               :content="pendingNotificationsCount"
               style="top: 10px; left: -19px"
             >
@@ -471,15 +447,6 @@
 </template>
 
 <script>
-import company_menus from "../menus/company.json";
-import employee_menus from "../menus/employee.json";
-import branch_menus from "../menus/branch.json";
-import guard_menus from "../menus/guard.json";
-import host_menus from "../menus/host.json";
-
-import company_top_menu from "../menus/company_modules_top.json";
-import employee_top_menu from "../menus/employee_modules_top.json";
-
 export default {
   data() {
     return {
@@ -497,59 +464,6 @@ export default {
           elevation: 0,
           selected: "",
         },
-        employees: {
-          elevation: 0,
-          selected: "",
-        },
-        attendance: {
-          elevation: 0,
-          selected: "",
-        },
-        payroll: {
-          elevation: 0,
-          selected: "",
-        },
-        access_control: {
-          elevation: 0,
-          selected: "",
-        },
-        visitors: {
-          elevation: 0,
-          selected: "",
-        },
-        reports: {
-          elevation: 0,
-          selected: "",
-        },
-
-        profile_topmenu: {
-          elevation: 0,
-          selected: "",
-        },
-        attendance_topmenu: {
-          elevation: 0,
-          selected: "",
-        },
-        requests_topmenu: {
-          elevation: 0,
-          selected: "",
-        },
-        announcements_topmenu: {
-          elevation: 0,
-          selected: "",
-        },
-        payslips_topmenu: {
-          elevation: 0,
-          selected: "",
-        },
-        schedule_topmenu: {
-          elevation: 0,
-          selected: "",
-        },
-        community: {
-          elevation: 0,
-          selected: "",
-        },
         companies: {
           elevation: 0,
           selected: "",
@@ -557,13 +471,9 @@ export default {
       },
 
       topMenu_Selected: "dashboard",
-      company_menus,
-      employee_menus,
-      branch_menus,
-      guard_menus,
-      host_menus,
-      company_top_menu,
-      employee_top_menu,
+      company_menus: require("../menus/company.json"),
+      company_top_menu: require("../menus/company_modules_top.json"),
+
       pendingLeavesCount: 0,
       pendingNotificationsCount: 0,
       snackNotificationText: "",
@@ -678,29 +588,14 @@ export default {
     getLogo() {
       let logosrc = "/no-image.PNG";
 
-      if (
-        this.$auth.user &&
-        this.$auth.user.user_type == "company" &&
-        this.$auth.user.company.logo
-      ) {
-        logosrc = this.$auth.user.company.logo || "/no-image.PNG1111111";
-      } else if (this.$auth.user && this.$auth.user.user_type == "master") {
-        logosrc = "/no-image.PNG";
-      } else if (this.$auth.user && this.$auth.user.user_type == "employee") {
-        logosrc =
-          this.$auth.user.employee.profile_picture || "/no-profile-image.jpg";
-      } else if (this.$auth.user && this.$auth.user.user_type == "branch") {
-        logosrc = this.$auth.user.branch_logo || "/no-profile-image.jpg";
+      if (this.$auth.user.company.logo) {
+        return this.$auth.user.company.logo;
       }
 
       return logosrc;
     },
     getLoginType() {
       return this.$store.state.loginType;
-    },
-
-    hasDepartments() {
-      return this.$auth.user && this.$auth.user.assignedDepartments.length > 0;
     },
   },
   methods: {
@@ -784,36 +679,9 @@ export default {
     },
 
     setMenus() {
-      if (this.$auth.user.role.role_type == 0) {
-        {
-          alert("Invalid User Type");
-          this.logout();
-        }
-
-        return "";
-      }
-      let roleType = this.$auth.user.role.role_type.toLowerCase();
-
-      if (this.getLoginType === "company" || this.getLoginType === "branch") {
-        // this.items = this.company_menus;
-        this.items = this.company_menus.filter(
-          (item) => item.module === this.topMenu_Selected
-        );
-        return;
-      } else if (this.getLoginType === "employee") {
-        if (/guard/.test(roleType)) {
-          this.items = this.guard_menus;
-          return;
-        } else if (/host/.test(roleType)) {
-          this.items = this.host_menus;
-          return;
-        } else {
-          this.items = this.company_menus.filter(
-            (item) => item.module === this.topMenu_Selected
-          );
-          return;
-        }
-      }
+      this.items = this.company_menus.filter(
+        (item) => item.module === this.topMenu_Selected
+      );
     },
 
     changeLoginType() {
@@ -942,9 +810,7 @@ export default {
   text-align: center;
   width: 100%;
 }
-</style>
-<!-- Extra overriting classes-->
-<style scoped>
+
 .violet {
   background-color: #6946dd;
 }
@@ -1050,24 +916,24 @@ header i {
 }
 
 /* .theme--dark.v-toolbar.v-sheet {
-  background-color: #cfd8dc !important;
-} */
+    background-color: #cfd8dc !important;
+  } */
 /* .v-card {
-  background-color: #cfd8dc;
-}
-.v-card header {
-  background-color: #cfd8dc;
-}
-.v-card .v-card__title {
-  color: black;
-}
-.v-card i {
-  color: black;
-}
-
-.v-card .v-toolbar__title {
-  color: black;
-} */
+    background-color: #cfd8dc;
+  }
+  .v-card header {
+    background-color: #cfd8dc;
+  }
+  .v-card .v-card__title {
+    color: black;
+  }
+  .v-card i {
+    color: black;
+  }
+  
+  .v-card .v-toolbar__title {
+    color: black;
+  } */
 
 .input-small-fieldset fieldset {
   height: 30px;
@@ -1111,9 +977,9 @@ header i {
   }
 }
 /* .v-application .primary--text {
-  color: #6946dd !important;
-  caret-color: #6946dd !important;
-} */
+    color: #6946dd !important;
+    caret-color: #6946dd !important;
+  } */
 
 .slidegroup1 .v-slide-group {
   height: 34px !important;
@@ -1379,18 +1245,11 @@ button {
 }
 
 /* .no-border:before {
-  border-color: #fff !important;
-} */
+    border-color: #fff !important;
+  } */
 
 .logtable .v-data-table__wrapper {
   height: 670px;
   overflow-y: scroll;
 }
 </style>
-<!-- <style>
-body {
-  min-width: 1600px;
-}
-</style> -->
-
-<!-- <link rel="stylesheet" href="../static/css/textbox-label-style.css" /> -->
