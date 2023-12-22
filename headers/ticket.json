@@ -2,104 +2,112 @@
   {
     "text": "Reference Id",
     "align": "left",
-    "sortable": true,
+    "filterable": true,
     "key": "id",
     "value": "id",
-    "filterable": true,
-    "filterSpecial": false,
+    "filter_type": "text",
+    "field_type": "number",
     "width": "130px"
   },
-
   {
     "text": "Title",
     "align": "left",
-    "sortable": true,
+    "filterable": true,
     "key": "title",
     "value": "title",
-    "filterable": true,
-    "filterSpecial": false,
+    "filter_type": "text",
+    "field_type": "string",
     "width": "150px"
   },
-
   {
     "text": "Desciption",
     "align": "left",
-    "sortable": true,
+    "filterable": false,
     "key": "description",
     "value": "description",
-    "filterable": true,
-    "filterSpecial": false,
+    "filter_type": "text",
+    "field_type": "string",
     "width": "250px"
   },
-
   {
     "text": "Priority",
     "align": "left",
-    "sortable": true,
-    "key": "priority",
-    "value": "priority",
     "filterable": true,
-    "filterSpecial": false,
+    "key": "prority",
+    "value": "prority",
+    "filter_type": "dropdown",
+    "dropdownItems": [
+      { "id": "", "name": "Select All" },
+      { "id": "High", "name": "High" },
+      { "id": "Medium", "name": "Medium" },
+      { "id": "Low", "name": "Low" }
+    ],
+    "field_type": "string",
     "width": "130px"
   },
-
   {
     "text": "Status",
     "align": "left",
-    "sortable": true,
+    "filterable": true,
     "key": "status",
     "value": "status",
-    "filterable": true,
-    "filterSpecial": false,
+    "filter_type": "dropdown",
+    "dropdownItems": [
+      { "id": "", "name": "Select All" },
+      { "id": "Open", "name": "Open" },
+      { "id": "In Progress", "name": "In Progress" },
+      { "id": "Pending", "name": "Pending" },
+      { "id": "Close", "name": "Close" }
+    ],
+    "field_type": "string",
     "width": "130px"
   },
-
   {
     "text": "Ticket Open Date Time",
     "align": "left",
-    "sortable": true,
+    "filterable": true,
     "key": "ticket_open_date_time",
     "value": "ticket_open_date_time",
-    "filterable": true,
-    "filterSpecial": false,
+    "filter_type": "date",
+    "field_type": "date",
     "width": "180px"
   },
-
   {
     "text": "Ticket Close Date Time",
     "align": "left",
-    "sortable": true,
+    "filterable": true,
     "key": "ticket_close_date_time",
     "value": "ticket_close_date_time",
-    "filterable": true,
-    "filterSpecial": false,
+    "filter_type": "date",
+    "field_type": "date",
     "width": "180px"
   },
-
   {
     "text": "Attachment",
     "align": "left",
-    "sortable": true,
+    "filterable": true,
     "key": "attachment",
     "value": "attachment",
-    "filterable": true,
-    "filterSpecial": false,
+    "filter_type": "",
+    "field_type": "",
     "width": "130px"
   },
   {
     "text": "History",
     "align": "left",
-    "sortable": true,
+    "filterable": false,
     "key": "ticket_history",
     "value": "ticket_history",
-    "filterable": true,
-    "filterSpecial": false
+    "filter_type": "",
+    "field_type": ""
   },
   {
     "text": "Action",
     "align": "left",
-    "sortable": false,
+    "filterable": false,
     "key": "options",
-    "value": "options"
+    "value": "options",
+    "filter_type": "",
+    "field_type": ""
   }
 ]

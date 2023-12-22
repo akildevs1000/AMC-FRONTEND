@@ -4,13 +4,6 @@
       <v-snackbar v-model="snackbar" small top="top" :color="color">
         {{ response }}
       </v-snackbar>
-      <v-snackbar v-model="snack" :timeout="3000" :color="snackColor">
-        {{ snackText }}
-
-        <template v-slot:action="{ attrs }">
-          <v-btn v-bind="attrs" text @click="snack = false"> Close </v-btn>
-        </template>
-      </v-snackbar>
     </div>
     <div v-if="!loading">
       <v-card elevation="0" class="mt-2">
@@ -27,12 +20,10 @@
               text
               title="Reload"
             >
-              <v-icon class="ml-2" @click="clearFilters" dark
-                >mdi mdi-reload</v-icon
-              >
+              <v-icon class="ml-2" @click="reload" dark>mdi-reload</v-icon>
             </v-btn>
           </span>
-          <!-- <span>
+          <span>
             <v-btn
               dense
               class="ma-0 px-0"
@@ -41,11 +32,11 @@
               text
               title="Filter"
             >
-              <v-icon @click="toggleFilter" class="mx-1 ml-2"
+              <v-icon @click="isFilter = !isFilter" class="mx-1 ml-2"
                 >mdi mdi-filter</v-icon
               >
             </v-btn>
-          </span> -->
+          </span>
 
           <v-spacer></v-spacer>
 
@@ -69,6 +60,14 @@
           class="elevation-1"
           :server-items-length="totalRowsCount"
         >
+          <template v-slot:header="{ props: { headers } }">
+            <TicketFilters
+              v-if="isFilter"
+              :headers="headers"
+              @filtered-value="handleFilters"
+            />
+          </template>
+
           <template v-slot:item.company="{ item, index }">
             <v-card
               elevation="0"
@@ -88,7 +87,7 @@
             </v-card>
           </template>
 
-          <template v-slot:item.priority="{ item }">
+          <template v-slot:item.prority="{ item }">
             <v-chip dark small :color="priorityRelatedColor(item.prority)">{{
               item.prority
             }}</v-chip>
@@ -110,7 +109,11 @@
           </template>
 
           <template v-slot:item.attachment="{ item }">
-            <ViewAttachment :key="getRandomId()" v-if="item.attachment" :src="item.attachment" />
+            <ViewAttachment
+              :key="getRandomId()"
+              v-if="item.attachment"
+              :src="item.attachment"
+            />
           </template>
 
           <template v-slot:item.options="{ item }">
@@ -280,6 +283,12 @@ export default {
     getRandomId() {
       return Math.random().toString(36).substring(2);
     },
+    handleFilters({ key, search_value }) {
+      console.log(search_value);
+      // if(search_value.length < 3) return;
+      this.filters[key] = search_value;
+      this.getDataFromApi();
+    },
     priorityRelatedColor(value) {
       let color = {
         High: "red",
@@ -288,7 +297,6 @@ export default {
       };
       return color[value];
     },
-
     statusRelatedColor(value) {
       let color = {
         Open: "green",
@@ -297,80 +305,8 @@ export default {
       };
       return color[value];
     },
-    caps(str) {
-      if (str == "" || str == null) {
-        return "---";
-      } else {
-        let res = str.toString();
-        return res.replace(/\b\w/g, (c) => c.toUpperCase());
-      }
-    },
-    closePopup() {
-      //croppingimagestep5
-      this.$refs.attachment_input.value = null;
-      this.dialogCropping = false;
-    },
-    saveCroppedImageStep2() {
-      this.cropedImage = this.$refs.cropper.getCroppedCanvas().toDataURL();
-
-      this.image_name = this.cropedImage;
-      this.previewImage = this.cropedImage;
-
-      this.dialogCropping = false;
-    },
-    close() {
-      this.dialog = false;
-      this.errors = [];
-      setTimeout(() => {}, 300);
-    },
-    importbranch() {
-      let payload = new FormData();
-      payload.append("branchs", this.files);
-      payload.append("company_id", this.$auth?.user?.company?.id);
-      let options = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      };
-      this.btnLoader = true;
-      this.$axios
-        .post("/branch/import", payload, options)
-        .then(({ data }) => {
-          this.btnLoader = false;
-          if (!data.status) {
-            this.errors = data.errors;
-            payload.delete("branchs");
-          } else {
-            this.errors = [];
-            this.snackbar = true;
-            this.response = "branchs imported successfully";
-            this.getDataFromApi();
-            this.close();
-          }
-        })
-        .catch((e) => {
-          if (e.toString().includes("Error: Network Error")) {
-            this.errors = [
-              "File is modified.Please cancel the current file and try again",
-            ];
-            this.btnLoader = false;
-          }
-        });
-    },
-    can(per) {
-      return this.$pagePermission.can(per, this);
-    },
-    applyFilters() {
-      this.getDataFromApi();
-    },
-    toggleFilter() {
-      // this.filters = {};
-      this.isFilter = !this.isFilter;
-    },
-    clearFilters() {
+    reload() {
       this.filters = {};
-
-      this.isFilter = false;
       this.getDataFromApi();
     },
     async getDataFromApi() {
