@@ -10,6 +10,16 @@
     "width": "130px"
   },
   {
+    "text": "Company",
+    "align": "left",
+    "sortable": true,
+    "key": "company",
+    "value": "company",
+    "filterable": true,
+    "filterSpecial": false,
+    "width": "250px"
+  },
+  {
     "text": "Title",
     "align": "left",
     "filterable": true,
@@ -33,15 +43,9 @@
     "text": "Priority",
     "align": "left",
     "filterable": true,
-    "key": "prority",
-    "value": "prority",
+    "key": "priority",
+    "value": "priority",
     "filter_type": "dropdown",
-    "dropdownItems": [
-      { "id": "", "name": "Select All" },
-      { "id": "High", "name": "High" },
-      { "id": "Medium", "name": "Medium" },
-      { "id": "Low", "name": "Low" }
-    ],
     "field_type": "string",
     "width": "130px"
   },

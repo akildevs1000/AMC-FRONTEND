@@ -7,7 +7,13 @@
     "menu": "dashboard",
     "module": "dashboard"
   },
-
+  {
+    "icon": "mdi-file-document",
+    "title": "AMC",
+    "to": "/amc",
+    "menu": "amc",
+    "module": "amc"
+  },
   {
     "icon": "mdi-ticket",
     "title": "Tickets",
@@ -15,12 +21,5 @@
     "submenu": "tickets",
     "menu": "tickets",
     "module": "dashboard"
-  },
-  {
-    "icon": "mdi-ticket",
-    "title": "Tickets",
-    "to": "/tickets",
-    "menu": "tickets",
-    "module": "tickets"
   }
 ]

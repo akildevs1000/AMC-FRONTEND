@@ -72,7 +72,7 @@ export default {
     "~/plugins/custom-methods.js",
     { src: "~/plugins/crypto.js", mode: "client" },
     { src: "~/plugins/axios.js" },
-    { src: "~/plugins/TiptapVuetify", mode: "client" },
+    // { src: "~/plugins/TiptapVuetify", mode: "client" },
     { src: "~/plugins/vue-apexchart.js", ssr: false },
   ],
 
@@ -104,9 +104,9 @@ export default {
     strategies: {
       local: {
         endpoints: {
-          login: { url: "login", method: "post", propertyName: "token" },
+          login: { url: "technician/login", method: "post", propertyName: "token" },
           logout: false,
-          user: { url: "me", method: "get", propertyName: false },
+          user: { url: "technician/me", method: "get", propertyName: false },
         },
         maxAge: 86400, // 24 hours
       },

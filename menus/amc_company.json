@@ -20,51 +20,11 @@
   },
 
   {
-    "text": "Last Visit",
-    "align": "left",
-    "sortable": true,
-    "key": "last_visit",
-    "value": "last_visit",
-    "filterable": true,
-    "filterSpecial": false
-  },
-
-  {
     "text": "Name/Phone/Email",
     "align": "left",
     "sortable": true,
     "key": "contact",
     "value": "contact",
-    "filterable": true,
-    "filterSpecial": false
-  },
-
-  {
-    "text": "Equipement",
-    "align": "left",
-    "sortable": true,
-    "key": "contact",
-    "value": "contact",
-    "filterable": true,
-    "filterSpecial": false
-  },
-
-  {
-    "text": "Since",
-    "align": "left",
-    "sortable": true,
-    "key": "member_from",
-    "value": "member_from",
-    "filterable": true,
-    "filterSpecial": false
-  },
-
-  {
-    "text": "Expiry",
-    "align": "left",
-    "sortable": true,
-    "key": "expiry",
-    "value": "expiry",
     "filterable": true,
     "filterSpecial": false
   },

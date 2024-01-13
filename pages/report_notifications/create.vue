@@ -428,23 +428,8 @@
 </template>
 
 <script>
-import {
-  TiptapVuetify,
-  Heading,
-  Bold,
-  Italic,
-  Strike,
-  Underline,
-  Paragraph,
-  BulletList,
-  OrderedList,
-  ListItem,
-  Blockquote,
-  History,
-} from "tiptap-vuetify";
 
 export default {
-  components: { TiptapVuetify },
 
   data: () => ({
     menu: false,

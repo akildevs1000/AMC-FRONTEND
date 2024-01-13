@@ -6,7 +6,7 @@
     ></v-img>
     <v-btn class="mt-2" style="width: 100%" small @click="onpick_attachment"
       >{{ !upload.name ? "Upload" : "Change" }}
-      <v-icon right dark>mdi-cloud-upload</v-icon>
+      <v-icon right dark>mdi-camera</v-icon>
     </v-btn>
 
     <input
