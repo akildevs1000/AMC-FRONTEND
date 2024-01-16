@@ -9,7 +9,7 @@
       <v-card elevation="0" class="mt-2">
         <v-toolbar class="mb-2" dense flat>
           <v-toolbar-title>
-            <span> {{ Model }}s </span></v-toolbar-title
+            <span> {{ Model }}s</span></v-toolbar-title
           >
           <span>
             <v-btn
@@ -65,7 +65,7 @@
               style="background: none"
               class="d-flex align-center"
             >
-              <v-avatar class="mr-1">
+              <!-- <v-avatar class="mr-1">
                 <img
                   :src="
                     company && company.logo
@@ -74,7 +74,7 @@
                   "
                   alt="Avatar"
                 />
-              </v-avatar>
+              </v-avatar> -->
               <div class="mt-2">
                 <strong>
                   {{ company.name }}</strong
@@ -85,14 +85,9 @@
               </div>
             </v-card>
           </template>
-
-          <template v-slot:item.priority="{ item }">
-            <v-chip
-              dark
-              small
-              :color="priorityRelatedColor(item.priority.name)"
-              >{{ item.priority.name ?? "---" }}</v-chip
-            >
+          
+          <template v-slot:item.schedule_date="{ item }">
+            {{ item.pivot.schedule_date }}
           </template>
 
           <template v-slot:item.status="{ item }">

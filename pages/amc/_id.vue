@@ -189,7 +189,7 @@ export default {
             this.processCheckList(data.record.id, cid);
           }
         })
-        .catch(({ response }) => handleErrorResponse(response));
+        .catch(({ response }) => this.handleErrorResponse(response));
     },
 
     processCheckList(id, cid) {
@@ -247,7 +247,7 @@ export default {
           alert("Form has been added");
           this.$router.push("/");
         })
-        .catch(({ response }) => handleErrorResponse(response));
+        .catch(({ response }) => this.handleErrorResponse(response));
     },
 
     handleErrorResponse(response) {

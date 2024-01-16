@@ -6,8 +6,7 @@
     "key": "id",
     "value": "id",
     "filter_type": "text",
-    "field_type": "number",
-    "width": "130px"
+    "field_type": "number"
   },
   {
     "text": "Company",
@@ -16,8 +15,7 @@
     "key": "company",
     "value": "company",
     "filterable": true,
-    "filterSpecial": false,
-    "width": "250px"
+    "filterSpecial": false
   },
   {
     "text": "Title",
@@ -26,28 +24,53 @@
     "key": "title",
     "value": "title",
     "filter_type": "text",
-    "field_type": "string",
-    "width": "150px"
-  },
-  {
-    "text": "Desciption",
-    "align": "left",
-    "filterable": false,
-    "key": "description",
-    "value": "description",
-    "filter_type": "text",
-    "field_type": "string",
-    "width": "250px"
+    "field_type": "string"
   },
   {
     "text": "Priority",
     "align": "left",
     "filterable": true,
     "key": "priority",
-    "value": "priority",
+    "value": "priority.name",
     "filter_type": "dropdown",
-    "field_type": "string",
-    "width": "130px"
+    "field_type": "string"
+  },
+  
+  {
+    "text": "Ticket Open Date Time",
+    "align": "left",
+    "filterable": true,
+    "key": "ticket_open_date_time",
+    "value": "ticket_open_date_time",
+    "filter_type": "date",
+    "field_type": "date"
+  },
+  {
+    "text": "Asigned Schedule Date",
+    "align": "left",
+    "sortable": true,
+    "key": "schedule_date",
+    "value": "schedule_date",
+    "filterable": true,
+    "filterSpecial": false
+  },
+  {
+    "text": "Ticket Close Date Time",
+    "align": "left",
+    "filterable": true,
+    "key": "ticket_close_date_time",
+    "value": "ticket_close_date_time",
+    "filter_type": "date",
+    "field_type": "date"
+  },
+  {
+    "text": "History",
+    "align": "left",
+    "filterable": false,
+    "key": "ticket_history",
+    "value": "ticket_history",
+    "filter_type": "",
+    "field_type": ""
   },
   {
     "text": "Status",
@@ -63,47 +86,7 @@
       { "id": "Pending", "name": "Pending" },
       { "id": "Close", "name": "Close" }
     ],
-    "field_type": "string",
-    "width": "130px"
-  },
-  {
-    "text": "Ticket Open Date Time",
-    "align": "left",
-    "filterable": true,
-    "key": "ticket_open_date_time",
-    "value": "ticket_open_date_time",
-    "filter_type": "date",
-    "field_type": "date",
-    "width": "180px"
-  },
-  {
-    "text": "Ticket Close Date Time",
-    "align": "left",
-    "filterable": true,
-    "key": "ticket_close_date_time",
-    "value": "ticket_close_date_time",
-    "filter_type": "date",
-    "field_type": "date",
-    "width": "180px"
-  },
-  {
-    "text": "Attachment",
-    "align": "left",
-    "filterable": true,
-    "key": "attachment",
-    "value": "attachment",
-    "filter_type": "",
-    "field_type": "",
-    "width": "130px"
-  },
-  {
-    "text": "History",
-    "align": "left",
-    "filterable": false,
-    "key": "ticket_history",
-    "value": "ticket_history",
-    "filter_type": "",
-    "field_type": ""
+    "field_type": "string"
   },
   {
     "text": "Action",

@@ -13,8 +13,8 @@
           class="mx-2"
           dark
           small
-          :color="statusRelatedColor(item.status)"
-          >{{ item.status }}</v-chip
+          :color="statusRelatedColor(payload.status)"
+          >{{ payload.status }}</v-chip
         >
 
         <v-spacer></v-spacer>
@@ -152,6 +152,21 @@
                   errors && errors.comments ? errors.comments[0] : ''
                 "
               ></v-textarea>
+            </td>
+          </tr>
+          <tr>
+            <th>Status</th>
+            <td>
+              <v-select
+                :items="[`Open`, `In Progress`, `Pending`, `Close`]"
+                dense
+                outlined
+                v-model="payload.status"
+                :hide-details="!errors.status"
+                :error-messages="
+                  errors && errors.status ? errors.status[0] : ''
+                "
+              ></v-select>
             </td>
           </tr>
         </table>

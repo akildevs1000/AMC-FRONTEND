@@ -20,32 +20,8 @@
     "filterSpecial": false,
     "width": "250px"
   },
-
   {
-    "text": "Contract Start",
-    "align": "left",
-    "sortable": true,
-    "key": "contract.start_date",
-    "value": "contract.start_date",
-    "filterable": true,
-    "filterSpecial": false,
-    "width": "150px"
-  },
-
-  {
-    "text": "Contract Expire",
-    "align": "left",
-    "sortable": true,
-    "key": "contract.expire_date",
-    "value": "contract.expire_date",
-    "filterable": true,
-    "filterSpecial": false,
-    "width": "150px"
-  },
-  
-
-  {
-    "text": "Schedule Start Date",
+    "text": "Schedule Month",
     "align": "left",
     "sortable": true,
     "key": "schedule_start_date",
@@ -54,11 +30,11 @@
     "filterSpecial": false
   },
   {
-    "text": "Schedule Expire Date",
+    "text": "Asigned Schedule Date",
     "align": "left",
     "sortable": true,
-    "key": "schedule_end_date",
-    "value": "schedule_end_date",
+    "key": "schedule_date",
+    "value": "schedule_date",
     "filterable": true,
     "filterSpecial": false
   },

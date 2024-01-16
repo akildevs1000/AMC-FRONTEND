@@ -94,7 +94,9 @@
               >{{ item.priority.name ?? "---" }}</v-chip
             >
           </template>
-
+          <template v-slot:item.schedule_date="{ item }">
+            {{ item.pivot.schedule_date }}
+          </template>
           <template v-slot:item.status="{ item }">
             <v-chip dark small :color="statusRelatedColor(item.status)">
               {{ item.status }}</v-chip
@@ -103,11 +105,7 @@
 
           <template v-slot:item.options="{ item }">
             <v-menu
-              v-if="
-                item.status == 'pending' &&
-                currentDate >= item.schedule_start_date &&
-                currentDate <= item.schedule_end_date
-              "
+              
               bottom
               left
             >

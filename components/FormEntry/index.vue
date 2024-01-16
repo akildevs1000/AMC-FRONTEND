@@ -201,16 +201,6 @@ export default {
         filterSpecial: false,
       },
       {
-        text: "Summary",
-        align: "left",
-        sortable: true,
-        key: "summary",
-        value: "summary",
-        filterable: true,
-        filterSpecial: false,
-        width: "300px",
-      },
-      {
         text: "Created Date",
         align: "left",
         sortable: true,
