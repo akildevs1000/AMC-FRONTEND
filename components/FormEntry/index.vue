@@ -1,78 +1,65 @@
 <template>
-  <v-card elevation="0">
-    <v-row no-gutters class="mb-5">
-      <v-col cols="12">
-        <v-toolbar dense flat>
-          <v-toolbar-title>Reports</v-toolbar-title>
-          <v-icon color="black" @click="reload">mdi-reload</v-icon>
-        </v-toolbar>
-        <v-toolbar dense flat>
-          <v-row>
-            <v-col cols="2">
-              <v-autocomplete
-                label="Select Job Type"
-                dense
-                outlined
-                v-model="filters.work_type"
-                :items="[
-                  { id: ``, name: `Select All` },
-                  { id: `amc`, name: `AMC` },
-                  { id: `ticket`, name: `Ticket` },
-                ]"
-                item-value="id"
-                item-text="name"
-                :hide-details="true"
-              ></v-autocomplete>
-            </v-col>
-            <v-col cols="2">
-              <v-autocomplete
-                label="Select Equipment Category"
-                dense
-                outlined
-                v-model="filters.equipment_category_id"
-                :items="[
-                  { id: ``, name: `Select All` },
-                  ...equipmentCategoryList,
-                ]"
-                item-value="id"
-                item-text="name"
-                :hide-details="true"
-              ></v-autocomplete>
-            </v-col>
-            <v-col cols="2">
-              <CustomDateFilter
-                @filter-attr="filterAttr"
-                :defaultFilterType="1"
-                height="40px"
-              />
-            </v-col>
-            <v-col cols="3">
-              <v-btn
-                color="primary"
-                label="Select Technician"
-                dense
-                @click="getDataFromApi()"
-                >Generate Report</v-btn
-              >
-            </v-col>
-          </v-row>
-        </v-toolbar>
+  <v-container>
+    <v-row>
+      <v-col cols="4">
+        <v-autocomplete
+          label="Select Job Type"
+          dense
+          outlined
+          v-model="filters.work_type"
+          :items="[
+            { id: ``, name: `Select All` },
+            { id: `amc`, name: `AMC` },
+            { id: `ticket`, name: `Ticket` },
+          ]"
+          item-value="id"
+          item-text="name"
+          :hide-details="true"
+        ></v-autocomplete>
       </v-col>
-    </v-row>
-    <v-data-table
-      dense
-      :headers="headers"
-      :items="data"
-      model-value="data.id"
-      :loading="loading"
-      :options.sync="options"
-      :footer-props="{
-        itemsPerPageOptions: [100, 500, 1000],
-      }"
-      class="elevation-1"
-      :server-items-length="totalRowsCount"
-    >
-      <!-- <template
+      <v-col cols="4">
+        <v-autocomplete
+          label="Select Equipment Category"
+          dense
+          outlined
+          v-model="filters.equipment_category_id"
+          :items="[{ id: ``, name: `Select All` }, ...equipmentCategoryList]"
+          item-value="id"
+          item-text="name"
+          :hide-details="true"
+        ></v-autocomplete>
+      </v-col>
+      <v-col cols="4">
+        <CustomDateFilter
+          @filter-attr="filterAttr"
+          :defaultFilterType="1"
+          height="40px"
+        />
+      </v-col>
+      <v-col cols="3">
+        <v-btn
+          color="primary"
+          label="Select Technician"
+          dense
+          @click="getDataFromApi()"
+          >Generate Report</v-btn
+        >
+      </v-col>
+      <v-col cols="12">
+        <v-data-table
+          dense
+          :headers="headers"
+          :items="data"
+          model-value="data.id"
+          :loading="loading"
+          :options.sync="options"
+          :footer-props="{
+            itemsPerPageOptions: [100, 500, 1000],
+          }"
+          class="elevation-1"
+          :server-items-length="totalRowsCount"
+        >
+          <!-- <template
         v-slot:item.company="{
           item: {
             service_call: { contract },
@@ -103,48 +90,50 @@
           </div>
         </v-card>
       </template> -->
-      <template v-slot:item.summary="{ item }">
-        <ReadMore :text="item.summary" />
-      </template>
+          <template v-slot:item.summary="{ item }">
+            <ReadMore :text="item.summary" />
+          </template>
 
-      <template v-slot:item.before_attachment="{ item }">
-        <ViewAttachment
-          v-if="item.before_attachment"
-          :src="item.before_attachment"
-        />
-      </template>
-      <template v-slot:item.after_attachment="{ item }">
-        <ViewAttachment
-          v-if="item.after_attachment"
-          :src="item.after_attachment"
-        />
-      </template>
+          <template v-slot:item.before_attachment="{ item }">
+            <ViewAttachment
+              v-if="item.before_attachment"
+              :src="item.before_attachment"
+            />
+          </template>
+          <template v-slot:item.after_attachment="{ item }">
+            <ViewAttachment
+              v-if="item.after_attachment"
+              :src="item.after_attachment"
+            />
+          </template>
 
-      <template v-slot:item.service_call="{ item }">
-        Reference Id: {{ item.service_call_id }}
-        <!-- <v-chip dark small :color="statusRelatedColor(item.service_call.status)">{{
+          <template v-slot:item.service_call="{ item }">
+            Reference Id: {{ item.service_call_id }}
+            <!-- <v-chip dark small :color="statusRelatedColor(item.service_call.status)">{{
                 item.service_call
               }}</v-chip> -->
-      </template>
-
-      <template v-slot:item.options="{ item }">
-        <v-menu bottom left>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn dark-2 icon v-bind="attrs" v-on="on">
-              <v-icon>mdi-dots-vertical</v-icon>
-            </v-btn>
           </template>
-          <v-list width="150" dense>
-            <v-list-item>
-              <v-list-item-title>
-                <FormEntryTableView :items="item.checklists" />
-              </v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </template>
-    </v-data-table>
-  </v-card>
+
+          <template v-slot:item.options="{ item }">
+            <v-menu bottom left>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn dark-2 icon v-bind="attrs" v-on="on">
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </template>
+              <v-list width="150" dense>
+                <v-list-item>
+                  <v-list-item-title>
+                    <FormEntryTableView :items="item.checklists" />
+                  </v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </template>
+        </v-data-table>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -220,7 +209,6 @@ export default {
   }),
 
   async created() {
-
     this.$axios.get(`equipmentCategoryList`).then(({ data }) => {
       this.equipmentCategoryList = data;
     });

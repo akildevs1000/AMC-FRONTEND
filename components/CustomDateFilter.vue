@@ -6,6 +6,7 @@
     v-model="time3"
     @change="CustomFilter()"
     range
+    style="width: 100%;"
   ></date-picker>
 </template>
 

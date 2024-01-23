@@ -1,13 +1,12 @@
 [
   {
-    "text": "Reference Id",
+    "text": "Ref #",
     "align": "left",
     "sortable": true,
     "key": "id",
     "value": "id",
     "filterable": true,
-    "filterSpecial": false,
-    "width": "130px"
+    "filterSpecial": false
   },
 
   {
@@ -16,16 +15,6 @@
     "sortable": true,
     "key": "company",
     "value": "company",
-    "filterable": true,
-    "filterSpecial": false,
-    "width": "250px"
-  },
-  {
-    "text": "Schedule Month",
-    "align": "left",
-    "sortable": true,
-    "key": "schedule_start_date",
-    "value": "schedule_start_date",
     "filterable": true,
     "filterSpecial": false
   },
@@ -39,23 +28,13 @@
     "filterSpecial": false
   },
   {
-    "text": "Created Date",
-    "align": "left",
-    "sortable": true,
-    "key": "date",
-    "value": "date",
-    "filterable": true,
-    "filterSpecial": false
-  },
-  {
     "text": "Status",
     "align": "left",
     "sortable": true,
     "key": "status",
     "value": "status",
     "filterable": true,
-    "filterSpecial": false,
-    "width": "130px"
+    "filterSpecial": false
   },
   {
     "text": "Action",

@@ -1,6 +1,6 @@
 [
   {
-    "text": "Reference Id",
+    "text": "Ref #",
     "align": "left",
     "filterable": true,
     "key": "id",
@@ -27,25 +27,6 @@
     "field_type": "string"
   },
   {
-    "text": "Priority",
-    "align": "left",
-    "filterable": true,
-    "key": "priority",
-    "value": "priority.name",
-    "filter_type": "dropdown",
-    "field_type": "string"
-  },
-  
-  {
-    "text": "Ticket Open Date Time",
-    "align": "left",
-    "filterable": true,
-    "key": "ticket_open_date_time",
-    "value": "ticket_open_date_time",
-    "filter_type": "date",
-    "field_type": "date"
-  },
-  {
     "text": "Asigned Schedule Date",
     "align": "left",
     "sortable": true,
@@ -54,24 +35,7 @@
     "filterable": true,
     "filterSpecial": false
   },
-  {
-    "text": "Ticket Close Date Time",
-    "align": "left",
-    "filterable": true,
-    "key": "ticket_close_date_time",
-    "value": "ticket_close_date_time",
-    "filter_type": "date",
-    "field_type": "date"
-  },
-  {
-    "text": "History",
-    "align": "left",
-    "filterable": false,
-    "key": "ticket_history",
-    "value": "ticket_history",
-    "filter_type": "",
-    "field_type": ""
-  },
+  
   {
     "text": "Status",
     "align": "left",

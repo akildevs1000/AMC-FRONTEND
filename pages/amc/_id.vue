@@ -123,12 +123,6 @@
 export default {
   props: ["id"],
   data: () => ({
-    valid: false,
-    popupDeviceId: null,
-    editDialog: false,
-    filters: {},
-    isFilter: false,
-    totalRowsCount: 0,
     snack: false,
     payload: {
       summary: "write your summary here",
@@ -200,8 +194,6 @@ export default {
       };
 
       let payload = new FormData();
-
-      let arr = [];
 
       this.data.forEach((category) => {
         if (cid == category.id) {

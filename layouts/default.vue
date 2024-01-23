@@ -20,7 +20,7 @@
     <!-- Main content area -->
     <v-app-bar app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>App Name</v-toolbar-title>
+      <v-toolbar-title>Welcome, {{$auth.user.name}}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn text @click="logout"><v-icon>mdi-logout</v-icon></v-btn>
     </v-app-bar>
@@ -45,6 +45,7 @@ export default {
         { title: "Home", icon: "mdi-home", route: "/" },
         { title: "AMC", icon: "mdi-file-document", route: "/amc" },
         { title: "Ticket", icon: "mdi-ticket", route: "/tickets" },
+        { title: "History", icon: "mdi-history", route: "/history" },
       ],
     };
   },
