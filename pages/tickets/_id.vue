@@ -365,7 +365,7 @@ Hello *${this.item.company.name}*,
 
 This is confirmation message from Akil Security regarding the update of the Service.
 
-Reference Number # ${this.item.id},
+Reference Number # *${this.item.id}*,
 
 🛠️ *Problem Identified:*
 ${this.payload.description}
