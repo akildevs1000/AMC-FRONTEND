@@ -233,7 +233,7 @@ export default {
 
     updateServiceCallStatus() {
       this.$axios
-        .put(`/service_call/${this.$route.params.id}`, { status: "completed" })
+        .put(`/service_call/${this.$route.params.id}`, { status: "Completed" })
         .then(({ data }) => {
           this.errors = [];
           alert("Form has been added");

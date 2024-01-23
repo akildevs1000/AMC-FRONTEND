@@ -275,8 +275,8 @@ export default {
     },
     statusRelatedColor(value) {
       let color = {
-        completed: "green",
-        pending: "red",
+        Completed: "green",
+        Pending: "red",
       };
       return color[value];
     },
