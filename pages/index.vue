@@ -5,7 +5,7 @@
     <v-tab>AMC Jobs</v-tab>
     <v-tab>Ticket</v-tab>
     <v-tab-item>
-      <AMC status="pending" />
+      <AMC status="Pending" />
     </v-tab-item>
     <v-tab-item>
       <Ticket status="Pending" />
