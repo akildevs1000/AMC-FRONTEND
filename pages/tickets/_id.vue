@@ -388,7 +388,7 @@ Akil Security
           this.errors = [];
           alert("Form has been added");
           console.log(data);
-          // this.$router.push("/");
+          this.$router.push("/");
         })
         .catch(({ response }) => this.handleErrorResponse(response));
     },
