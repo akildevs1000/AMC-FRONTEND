@@ -1,23 +1,34 @@
 <template>
-  <div>
+  <v-dialog v-model="dialog">
+    <template v-slot:activator="{ on }">
+      <v-btn color="primary" dark v-on="on">Customer Signature</v-btn>
+    </template>
     <v-card outlined>
       <v-toolbar dense flat class="grey lighten-2">
-        <b> Signature Pad</b>
+        <b>Signature Pad</b>
+        <v-spacer></v-spacer>
+        <v-icon @click="dialog = false">mdi-close-circle-outline</v-icon>
       </v-toolbar>
-      <VueSignaturePad height="500px" ref="signaturePad" />
-      <v-card-actions>
-        <div class="mt-1">
-          <v-btn small class="primary" @click="save">Save Signature</v-btn>
-          <v-btn small class="primary" @click="clear">Clear</v-btn>
-        </div>
-      </v-card-actions>
+      <Component :is="comp" ref="signaturePad" height="500px" />
+      <div class="mb-1 white text-center">
+        <v-btn small class="primary" @click="save">Save </v-btn>
+        <v-btn small class="primary" @click="clear">Clear</v-btn>
+      </div>
     </v-card>
-  </div>
+  </v-dialog>
 </template>
 
 <script>
 export default {
-  data: () => ({}),
+  data: () => ({
+    dialog: false,
+    comp: null,
+  }),
+  watch: {
+    dialog() {
+      setTimeout(() => (this.comp = "VueSignaturePad"), 100);
+    },
+  },
   methods: {
     clear() {
       this.$refs.signaturePad.clearSignature();
@@ -26,6 +37,7 @@ export default {
     save() {
       const { data } = this.$refs.signaturePad.saveSignature();
       this.$emit("sign", data);
+      this.dialog = false;
     },
   },
 };
