@@ -234,8 +234,19 @@
               </tr>
             </table>
           </v-col>
-          <v-col cols="12" class="text-right mt-5">
-            <v-btn small :loading="loading" @click="submit" class="primary"
+          <v-col cols="12" class="text-center">
+            <div>
+              <SignaturePad
+                @sign="
+                  (e) => {
+                    payload.sign = e;
+                  }
+                "
+              />
+            </div>
+          </v-col>
+          <v-col v-if="payload.sign" cols="12" class="">
+            <v-btn :loading="loading" @click="submit" block color="primary"
               >Submit</v-btn
             >
           </v-col>
@@ -245,6 +256,8 @@
   </div>
 </template>
 <script>
+import SignaturePad from "../../components/SignaturePad.vue";
+
 export default {
   props: ["id"],
   data: () => ({
@@ -256,6 +269,7 @@ export default {
     totalRowsCount: 0,
     snack: false,
     payload: {
+      sign: null,
       equipment_category_id: ``,
       summary: "write your summary here",
     },
@@ -274,7 +288,6 @@ export default {
     errors: [],
     whatsappPayload: {},
   }),
-
   created() {
     this.$axios.get(`ticket/${this.$route.params.id}`).then(({ data }) => {
       this.item = data;
@@ -283,9 +296,7 @@ export default {
       .get(this.endpoint)
       .then(({ data }) => (this.equipmentCategoryList = data));
   },
-
   methods: {
-    
     statusRelatedColor(value) {
       let color = {
         Open: "green",
@@ -296,15 +307,12 @@ export default {
     },
     submit() {
       this.loading = true;
-
       let options = {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       };
-
       let FormEntry = new FormData();
-
       FormEntry.append(`work_id`, this.$route.params.id);
       FormEntry.append(`work_type`, "ticket");
       FormEntry.append(
@@ -313,7 +321,6 @@ export default {
       );
       FormEntry.append(`summary`, this.payload.summary ?? "");
       FormEntry.append(`technician_id`, this.$auth.user.id);
-
       FormEntry.append(`actual_problem`, this.payload.actual_problem);
       FormEntry.append(`action_taken`, this.payload.action_taken);
       FormEntry.append(`description`, this.payload.description);
@@ -321,7 +328,6 @@ export default {
         `ticket_close_date_time`,
         this.payload.ticket_close_date_time
       );
-
       if (
         this.payload.before_attachment &&
         this.payload.before_attachment.name
@@ -331,7 +337,9 @@ export default {
       if (this.payload.after_attachment && this.payload.after_attachment.name) {
         FormEntry.append(`after_attachment`, this.payload.after_attachment);
       }
-
+      if (this.payload.sign && this.payload.sign.name) {
+        FormEntry.append(`sign`, this.payload.sign);
+      }
       this.$axios
         .post(`/form_entry`, FormEntry, options)
         .then(({ data }) => {
@@ -344,7 +352,6 @@ export default {
         })
         .catch(({ response }) => this.handleErrorResponse(response));
     },
-
     updateServiceCallStatus() {
       this.$axios
         .put(`/ticket/${this.$route.params.id}`, {
@@ -381,7 +388,7 @@ Thank you for your patience!
 Best regards,
 Akil Security
 `,
-      }
+      };
       this.$axios
         .post(`/sendWhatsapp`, this.whatsappPayload)
         .then(({ data }) => {
@@ -392,7 +399,6 @@ Akil Security
         })
         .catch(({ response }) => this.handleErrorResponse(response));
     },
-
     handleErrorResponse(response) {
       console.log(response);
       this.loading = false;
@@ -400,13 +406,13 @@ Akil Security
         return;
       }
       let { status, data } = response;
-
       if (status && status == 422) {
         this.errors = data.errors;
         return;
       }
     },
   },
+  components: { SignaturePad },
 };
 </script>
 <style scoped>

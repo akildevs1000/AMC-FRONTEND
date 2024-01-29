@@ -74,6 +74,7 @@ export default {
     { src: "~/plugins/axios.js" },
     // { src: "~/plugins/TiptapVuetify", mode: "client" },
     { src: "~/plugins/vue-apexchart.js", ssr: false },
+    { src: '~/plugins/vue-signature-pad.js', mode: 'client' }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
