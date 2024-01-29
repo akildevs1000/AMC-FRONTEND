@@ -232,18 +232,19 @@
                   ></v-select>
                 </td>
               </tr>
-            </table>
-          </v-col>
-          <v-col cols="12" class="text-center">
-            <div>
-              <SignaturePad
+              <tr>
+                <th>Customer Signature</th>
+                <td>
+                  <SignaturePad
                 @sign="
                   (e) => {
                     payload.sign = e;
                   }
                 "
               />
-            </div>
+                </td>
+              </tr>
+            </table>
           </v-col>
           <v-col v-if="payload.sign" cols="12" class="">
             <v-btn :loading="loading" @click="submit" block color="primary"
