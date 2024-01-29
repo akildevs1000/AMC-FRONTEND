@@ -257,7 +257,6 @@
   </div>
 </template>
 <script>
-import SignaturePad from "../../components/SignaturePad.vue";
 
 export default {
   props: ["id"],
@@ -413,7 +412,6 @@ Akil Security
       }
     },
   },
-  components: { SignaturePad },
 };
 </script>
 <style scoped>
