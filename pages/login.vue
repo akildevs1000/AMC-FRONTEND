@@ -329,7 +329,7 @@ export default {
     userId: "",
     credentials: {
       email: "technician@gmail.com",
-      password: "secret",
+      password: "password",
     },
   }),
   created() {

@@ -1,0 +1,15 @@
+[
+  {
+    "heading": "Camera",
+    "questions": [
+      {
+        "selectedOption": null,
+        "remarks": null,
+        "isRemarks": false,
+        "question": "Overall physical inspection of the camera?",
+        "options": ["Excellent", "Good", "Poor"],
+        "attachment_name": null
+      }
+    ]
+  }
+]

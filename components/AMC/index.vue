@@ -48,9 +48,15 @@
             <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
         </template>
-        <v-list width="150" dense>
-          <v-list-item @click="navigate(`/amc/${item.id}`)">
-            <v-list-item-title> AMC </v-list-item-title>
+        <v-list dense>
+          <v-list-item
+            v-for="(listItem, index) in equipmentCategoryList"
+            :key="index"
+            @click="navigate(`/amc/${listItem.id}_${item.id}`)"
+          >
+            <v-list-item-title>
+              {{ listItem.name }}
+            </v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -96,12 +102,17 @@ export default {
     loading: false,
     response: "",
     data: [],
+    equipmentCategoryList: [],
     errors: [],
     headers: require("../../headers/service_call.json"),
   }),
 
   async created() {
     this.loading = false;
+
+    this.$axios
+      .get(`equipmentCategoryList`)
+      .then(({ data }) => (this.equipmentCategoryList = data));
 
     this.getDataFromApi();
     //this.getDepartments(options);

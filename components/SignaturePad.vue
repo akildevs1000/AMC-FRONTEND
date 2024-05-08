@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog">
     <template v-slot:activator="{ on }">
-      <v-btn color="primary" dark v-on="on">Customer Signature</v-btn>
+      <v-btn block color="primary" dark v-on="on">{{ label }}</v-btn>
     </template>
     <v-card outlined>
       <v-toolbar dense flat class="grey lighten-2">
@@ -20,6 +20,12 @@
 
 <script>
 export default {
+  props: {
+    label: {
+      type: String,
+      default: "Customer Signature",
+    },
+  },
   data: () => ({
     dialog: false,
     comp: null,

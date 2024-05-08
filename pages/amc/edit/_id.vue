@@ -39,7 +39,6 @@
                 :key="optionIndex"
               >
                 <v-card
-                  @click="question.selectedOption = option"
                   style="border: 1px #cfc9c9 solid; border-radius: 10px"
                   elevation="0"
                   :class="question.selectedOption == option ? 'primary' : ''"
@@ -56,40 +55,20 @@
               </v-col>
 
               <v-col cols="12" class="text-right">
-                <span class="primary--text">
-                  <UploadAttachment
-                    label="Take Photo"
-                    @file-selected="
-                      (e) => {
-                        attachments.push({
-                          name: `file-${newHeadingIndex + 1}.${
-                            questionIndex + 1
-                          }.png`,
-                          attachment: e,
-                        });
-                        question.attachment_name = `file-${
-                          newHeadingIndex + 1
-                        }.${questionIndex + 1}.png`;
-                      }
-                    "
+                <span class="primary--text" v-if="question && question.attachment_name">
+                  <ViewFile
+                    :src="`http://192.168.2.24:8001/checklist/${form_entry_id}/${question.attachment_name}`"
                   />
                 </span>
-                <span
-                  @click="
-                    () => {
-                      question.isRemarks = !question.isRemarks;
-                      question.remarks = null;
-                    }
-                  "
-                  class="primary--text"
-                >
-                  <v-icon class="ml-5" color="primary"
+                <span class="grey--text">
+                  <v-icon class="ml-5" color="grey"
                     >mdi-clipboard-outline</v-icon
                   >
                   Add Note
                 </span>
 
                 <v-textarea
+                  readonly
                   v-model="question.remarks"
                   dense
                   :hide-details="true"
@@ -117,6 +96,7 @@
             <v-row>
               <v-col cols="12" class="text-right">
                 <v-textarea
+                  readonly
                   v-model="payload.defective_area"
                   dense
                   :hide-details="true"
@@ -140,6 +120,7 @@
             <v-row>
               <v-col cols="12" class="text-right">
                 <v-textarea
+                  readonly
                   v-model="payload.summary"
                   dense
                   :hide-details="true"
@@ -151,88 +132,62 @@
             </v-row>
           </v-card-text>
         </v-card>
+        <v-divider></v-divider>
       </v-col>
-      <v-col
-        v-if="payload && payload.sign"
-        cols="6"
-        offset="3"
-        class="text-center"
-      >
-        <v-btn class="primary" block dense dark @click="submit"> Submit </v-btn>
+
+      <v-col cols="6" offset="3">
+        <!-- <v-toolbar class="primary" rounded dense dark> Action </v-toolbar> -->
+        <v-card dense class="my-2" rounded>
+          <v-card-title>Customer action required</v-card-title>
+
+          <v-card-tex>
+           <v-container>
+            <v-text-field
+              v-model="payload.customer_name"
+              dense
+              :hide-details="true"
+              label="Customer Name"
+              outlined
+            ></v-text-field>
+            <br />
+            <v-text-field
+              v-model="payload.customer_phone"
+              dense
+              :hide-details="true"
+              label="Customer Phone"
+              outlined
+            ></v-text-field>
+           </v-container>
+          </v-card-tex>
+          <v-card-text>
+            <v-btn
+              v-if="payload && payload.customer_sign"
+              class="primary"
+              block
+              dense
+              dark
+              @click="submit"
+            >
+              Submit
+            </v-btn>
+
+            <SignaturePad
+              v-if="!payload.customer_sign"
+              label="Customer Signature"
+              @sign="
+                (e) => {
+                  payload.customer_sign = e;
+                }
+              "
+            />
+          </v-card-text>
+        </v-card>
+        <v-divider></v-divider>
       </v-col>
-      <v-col v-else cols="6" offset="3">
-        <SignaturePad
-          label="Technician Signature"
-          @sign="
-            (e) => {
-              payload.sign = e;
-            }
-          "
-        />
-      </v-col>
+
+      <v-col cols="6" offset="3" class="text-center"> </v-col>
     </v-row>
 
-    <v-row>
-      <v-col cols="12">
-        <v-expansion-panels>
-          <v-expansion-panel v-for="(eqCId, i) in data" :key="i">
-            <v-expansion-panel-header class="primarywhite--text">
-              <h3>{{ eqCId.name }}</h3>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content class="my-1">
-              <v-card
-                outlined
-                v-for="(h, hi) in eqCId.headings"
-                :key="hi"
-                class="mb-2 pa-2"
-              >
-                <p>
-                  <b>{{ hi + 1 }}. {{ h.name }}</b>
-                </p>
-
-                <v-container v-for="(q, qi) in h.questions" :key="qi">
-                  <!-- <p>Question Id. {{ q.id }}</p> -->
-                  <p>{{ qi + 1 }}. {{ q.name }}</p>
-
-                  <v-radio-group v-model="q.selectedOption" row>
-                    <v-radio
-                      v-for="(option, index) in radioOptions"
-                      :key="index"
-                      :label="option"
-                      :value="option"
-                    ></v-radio>
-                  </v-radio-group>
-                  <v-row no-gutters>
-                    <v-col cols="6" class="my-1">
-                      <v-textarea
-                        dense
-                        :hide-details="true"
-                        outlined
-                        v-model="q.remarks"
-                        label="Remarks"
-                        rows="1"
-                        auto-grow
-                      ></v-textarea>
-                    </v-col>
-                  </v-row>
-                  <v-row no-gutters>
-                    <v-col cols="3">
-                      <UploadAttachment
-                        @file-selected="
-                          (e) => {
-                            q.attachment = e;
-                          }
-                        "
-                      />
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
-      </v-col>
-    </v-row>
     <!-- <v-card v-if="equipmentCategoryId" class="mt-2" outlined elevation="0">
       <v-container>
         <p>
@@ -279,17 +234,16 @@ export default {
   props: ["id"],
   data: () => ({
     attachments: [],
-    newHeadings: require("../../headers/questions.json"),
+    newHeadings: [],
     snack: false,
     checkListPayload: {},
     payload: {
-      technician_id: 0,
       work_id: 0,
       equipment_category_id: 0,
-      work_type: "amc",
       sign: null,
-      defective_area: null,
-      summary: "write your summary here",
+      defective_area: "",
+      summary: "",
+      customer_sign: null,
     },
     Model: "Equipment",
     options: {},
@@ -307,102 +261,37 @@ export default {
     response: "",
     errors: [],
     item: {},
+    form_entry_id: 0,
   }),
 
   created() {
-    this.$axios.get(this.endpoint).then(({ data }) => {
-      this.data = data;
-      console.log(data);
+    this.form_entry_id = this.$route.params.id;
+    this.$axios.get(`/form_entry/${this.$route.params.id}`).then(({ data }) => {
+      this.payload.defective_area = data.defective_area;
+      this.payload.summary = data.summary;
+      this.newHeadings = data.checklists[0].checklist;
     });
-
-    let splitIds = this.$route.params.id.split("_");
-    this.payload.equipment_category_id = splitIds[0];
-    this.payload.work_id = splitIds[1];
-    this.payload.technician_id = this.$auth.user.id;
   },
 
   methods: {
     submit() {
+      let payload = {
+        customer_name: this.payload.customer_name,
+        customer_phone: this.payload.customer_phone,
+        customer_sign: this.payload.customer_sign,
+      };
       this.loading = true;
-
       this.$axios
-        .post(`/form_entry`, this.payload)
+        .post(`/form_entry/customer_update/${this.form_entry_id}`, payload)
         .then(({ data }) => {
           this.loading = false;
           if (!data.status) {
             this.errors = data.errors;
           } else {
-            this.processCheckListV1(data.record.id);
+            alert("Form has been modified");
           }
         })
         .catch(({ response }) => this.handleErrorResponse(response));
-    },
-
-    processCheckListV1(id = 1) {
-      this.checkListPayload = {
-        form_entry_id: id,
-        checklist: this.newHeadings,
-        attachments: this.attachments,
-      };
-
-      this.$axios
-        .post(`/checklist`, this.checkListPayload)
-        .then(({ data }) => {
-          this.loading = false;
-          if (!data.status) {
-            this.errors = data.errors;
-          } else {
-            // this.updateServiceCallStatus();
-            alert("Form has been added");
-          }
-        })
-        .catch(({ response }) => this.handleErrorResponse(response));
-    },
-
-    processCheckList(id) {
-      let options = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      };
-
-      let payload = new FormData();
-
-      this.data.forEach((category) => {
-        if (this.EQCID == category.id) {
-          category.headings.forEach((heading, hi) => {
-            heading.questions.forEach((e, i) => {
-              payload.append(`headings[${hi}][${i}][form_entry_id]`, id);
-              payload.append(`headings[${hi}][${i}][question_id]`, e.id);
-              payload.append(
-                `headings[${hi}][${i}][selectedOption]`,
-                e.selectedOption ?? "N/A"
-              );
-              payload.append(`headings[${hi}][${i}][remarks]`, e.remarks ?? "");
-
-              if (e.attachment && e.attachment.name) {
-                payload.append(
-                  `headings[${hi}][${i}][attachment]`,
-                  e.attachment
-                );
-              }
-            });
-          });
-        }
-      });
-
-      this.$axios
-        .post(`/checklist`, payload, options)
-        .then(({ data }) => {
-          this.loading = false;
-          if (!data.status) {
-            this.errors = data.errors;
-          } else {
-            // this.updateServiceCallStatus();
-            alert("Form has been added");
-          }
-        })
-        .catch((e) => console.log(e));
     },
 
     updateServiceCallStatus() {

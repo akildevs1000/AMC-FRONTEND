@@ -45,7 +45,7 @@ export default {
         { title: "Home", icon: "mdi-home", route: "/" },
         { title: "AMC", icon: "mdi-file-document", route: "/amc" },
         { title: "Ticket", icon: "mdi-ticket", route: "/tickets" },
-        { title: "History", icon: "mdi-history", route: "/history" },
+        { title: "Checklist", icon: "mdi-clipboard", route: "/checklist" },
       ],
     };
   },

@@ -1,50 +1,64 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="4">
-        <v-autocomplete
-          label="Select Job Type"
-          dense
-          outlined
-          v-model="filters.work_type"
-          :items="[
-            { id: ``, name: `Select All` },
-            { id: `amc`, name: `AMC` },
-            { id: `ticket`, name: `Ticket` },
-          ]"
-          item-value="id"
-          item-text="name"
-          :hide-details="true"
-        ></v-autocomplete>
+      <v-col cols="6">
+        <v-toolbar flat dense>
+          <v-toolbar-title> CheckList </v-toolbar-title>
+        </v-toolbar>
       </v-col>
-      <v-col cols="4">
-        <v-autocomplete
-          label="Select Equipment Category"
-          dense
-          outlined
-          v-model="filters.equipment_category_id"
-          :items="[{ id: ``, name: `Select All` }, ...equipmentCategoryList]"
-          item-value="id"
-          item-text="name"
-          :hide-details="true"
-        ></v-autocomplete>
+      <v-col cols="6" class="text-right">
+        <v-row>
+          <v-col cols="3">
+            <v-autocomplete
+              label="Select Job Type"
+              dense
+              outlined
+              v-model="filters.work_type"
+              :items="[
+                { id: ``, name: `Select All` },
+                { id: `amc`, name: `AMC` },
+                { id: `ticket`, name: `Ticket` },
+              ]"
+              item-value="id"
+              item-text="name"
+              :hide-details="true"
+            ></v-autocomplete>
+          </v-col>
+          <v-col cols="3">
+            <v-autocomplete
+              label="Select Equipment Category"
+              dense
+              outlined
+              v-model="filters.equipment_category_id"
+              :items="[
+                { id: ``, name: `Select All` },
+                ...equipmentCategoryList,
+              ]"
+              item-value="id"
+              item-text="name"
+              :hide-details="true"
+            ></v-autocomplete>
+          </v-col>
+          <v-col cols="4">
+            <CustomDateFilter
+              @filter-attr="filterAttr"
+              :defaultFilterType="1"
+              height="40px"
+            />
+          </v-col>
+          <v-col cols="2">
+            <v-btn
+              color="primary"
+              label="Select Technician"
+              dense
+              @click="getDataFromApi()"
+              >Submit</v-btn
+            >
+          </v-col>
+        </v-row>
       </v-col>
-      <v-col cols="4">
-        <CustomDateFilter
-          @filter-attr="filterAttr"
-          :defaultFilterType="1"
-          height="40px"
-        />
-      </v-col>
-      <v-col cols="3">
-        <v-btn
-          color="primary"
-          label="Select Technician"
-          dense
-          @click="getDataFromApi()"
-          >Generate Report</v-btn
-        >
-      </v-col>
+    </v-row>
+    <v-row>
       <v-col cols="12">
         <v-data-table
           dense
@@ -94,7 +108,7 @@
             <ReadMore :text="item.summary" />
           </template>
 
-          <template v-slot:item.before_attachment="{ item }">
+          <!-- <template v-slot:item.before_attachment="{ item }">
             <ViewAttachment
               v-if="item.before_attachment"
               :src="item.before_attachment"
@@ -105,13 +119,20 @@
               v-if="item.after_attachment"
               :src="item.after_attachment"
             />
-          </template>
+          </template> -->
 
           <template v-slot:item.service_call="{ item }">
             Reference Id: {{ item.service_call_id }}
             <!-- <v-chip dark small :color="statusRelatedColor(item.service_call.status)">{{
                 item.service_call
               }}</v-chip> -->
+          </template>
+
+          <template v-slot:item.customer_sign="{ item }">
+            <v-chip v-if="!item.customer_sign" dark small class="blue"
+              >Pending</v-chip
+            >
+            <ViewFile v-else :src="`http://192.168.2.24:8001/customer_sign/${item.customer_sign}`"/>
           </template>
 
           <template v-slot:item.options="{ item }">
@@ -123,8 +144,9 @@
               </template>
               <v-list width="150" dense>
                 <v-list-item>
-                  <v-list-item-title>
-                    <FormEntryTableView :items="item.checklists" />
+                  <v-list-item-title @click="moveTo(`/amc/edit/${item.id}`)">
+                    <v-icon small color="black">mdi-pencil</v-icon> Edit 
+                    <!-- <FormEntryTableView :items="item.checklists" /> -->
                   </v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -172,23 +194,68 @@ export default {
         filterSpecial: false,
       },
       {
-        text: "Before Attachment",
+        text: "Defective Area",
         align: "left",
         sortable: true,
-        key: "before_attachment",
-        value: "before_attachment",
+        key: "defective_area",
+        value: "defective_area",
         filterable: true,
         filterSpecial: false,
       },
       {
-        text: "After Attachment",
+        text: "Remarks",
         align: "left",
         sortable: true,
-        key: "after_attachment",
-        value: "after_attachment",
+        key: "summary",
+        value: "summary",
         filterable: true,
         filterSpecial: false,
       },
+      {
+        text: "Customer Name",
+        align: "left",
+        sortable: true,
+        key: "customer_name",
+        value: "customer_name",
+        filterable: true,
+        filterSpecial: false,
+      },
+      {
+        text: "Customer Phone",
+        align: "left",
+        sortable: true,
+        key: "customer_phone",
+        value: "customer_phone",
+        filterable: true,
+        filterSpecial: false,
+      },
+      {
+        text: "Customer Sign",
+        align: "left",
+        sortable: true,
+        key: "customer_sign",
+        value: "customer_sign",
+        filterable: true,
+        filterSpecial: false,
+      },
+      // {
+      //   text: "Before Attachment",
+      //   align: "left",
+      //   sortable: true,
+      //   key: "before_attachment",
+      //   value: "before_attachment",
+      //   filterable: true,
+      //   filterSpecial: false,
+      // },
+      // {
+      //   text: "After Attachment",
+      //   align: "left",
+      //   sortable: true,
+      //   key: "after_attachment",
+      //   value: "after_attachment",
+      //   filterable: true,
+      //   filterSpecial: false,
+      // },
       {
         text: "Created Date",
         align: "left",
@@ -225,6 +292,9 @@ export default {
     },
   },
   methods: {
+    moveTo(path) {
+      this.$router.push(path);
+    },
     exportCSV() {
       if (this.totalRowsCount === 0) {
         alert("No record to download");

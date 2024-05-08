@@ -328,18 +328,18 @@ export default {
         `ticket_close_date_time`,
         this.payload.ticket_close_date_time
       );
-      if (
-        this.payload.before_attachment &&
-        this.payload.before_attachment.name
-      ) {
-        FormEntry.append(`before_attachment`, this.payload.before_attachment);
-      }
+     
       if (this.payload.after_attachment && this.payload.after_attachment.name) {
         FormEntry.append(`after_attachment`, this.payload.after_attachment);
       }
-      if (this.payload.sign && this.payload.sign.name) {
-        FormEntry.append(`sign`, this.payload.sign);
+
+      if (this.payload.before_attachment && this.payload.before_attachment.name) {
+        FormEntry.append(`before_attachment`, this.payload.before_attachment);
       }
+      
+      FormEntry.append(`sign`, this.payload.sign);
+
+      
       this.$axios
         .post(`/form_entry`, FormEntry, options)
         .then(({ data }) => {
@@ -347,7 +347,8 @@ export default {
           if (!data.status) {
             this.errors = data.errors;
           } else {
-            this.updateServiceCallStatus();
+            alert("Form has been added");
+            // this.updateServiceCallStatus();
           }
         })
         .catch(({ response }) => this.handleErrorResponse(response));
