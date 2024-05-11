@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog">
+  <v-dialog v-model="dialog" max-width="500px">
     <template v-slot:activator="{ on }">
       <v-btn block color="primary" dark v-on="on">{{ label }}</v-btn>
     </template>
@@ -9,7 +9,7 @@
         <v-spacer></v-spacer>
         <v-icon @click="dialog = false">mdi-close-circle-outline</v-icon>
       </v-toolbar>
-      <Component :is="comp" ref="signaturePad" height="500px" />
+      <Component :is="comp" ref="signaturePad" width="500px" height="500px" />
       <div class="mb-1 white text-center">
         <v-btn small class="primary" @click="save">Save </v-btn>
         <v-btn small class="primary" @click="clear">Clear</v-btn>

@@ -3,21 +3,18 @@
     <template v-slot:activator="{ on, attrs }">
       <!-- <v-icon color="primary" v-bind="attrs" v-on="on">mdi-attachment</v-icon> -->
       <v-icon color="primary" v-bind="attrs" v-on="on"
-        >mdi-camera-outline</v-icon
+        >{{ icon }}</v-icon
       >
-      View Photo
-      <!-- <v-icon color="primary" v-bind="attrs" v-on="on">mdi-file-pdf</v-icon>
-      <v-icon color="primary" v-bind="attrs" v-on="on">mdi-paperclip</v-icon> -->
+      {{label}}
     </template>
 
-    <v-card flat>
-      <v-card-title>{{ label }} <v-spacer></v-spacer> 
-          
+    <v-card >
+      <v-toolbar flat dense>{{ label }} <v-spacer></v-spacer> 
           <v-icon @click="dialog = false" color="primary"
           >mdi-close-circle-outline</v-icon
         >
       
-      </v-card-title>
+      </v-toolbar>
 
       <v-img :src="src" :alt="altText"></v-img>
     </v-card>
@@ -30,7 +27,12 @@ export default {
     label: {
       type: String,
       required: true,
-      default: "Customer Signature",
+      default: "View Photo",
+    },
+    icon: {
+      type: String,
+      required: true,
+      default: "mdi-camera-outline",
     },
     src: {
       type: String,

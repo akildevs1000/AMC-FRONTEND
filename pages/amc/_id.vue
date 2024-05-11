@@ -5,14 +5,11 @@
         {{ response }}
       </v-snackbar>
     </div>
-    <!-- <v-card outlined>
-      <pre>{{ checkListPayload }}</pre>
-    </v-card> -->
     <v-row
       v-for="(newHeading, newHeadingIndex) in newHeadings"
       :key="newHeadingIndex"
     >
-      <v-col cols="6" offset="3">
+      <v-col cols="12">
         <v-toolbar class="primary" rounded dense dark>
           {{ newHeadingIndex + 1 }}. {{ newHeading.heading }}
         </v-toolbar>
@@ -42,7 +39,7 @@
                   @click="question.selectedOption = option"
                   style="border: 1px #cfc9c9 solid; border-radius: 10px"
                   elevation="0"
-                  :class="question.selectedOption == option ? 'primary' : ''"
+                  :class="getCellStyle(question.selectedOption, option)"
                 >
                   <v-card-text
                     class="pa-2"
@@ -54,23 +51,19 @@
                   </v-card-text>
                 </v-card>
               </v-col>
-
               <v-col cols="12" class="text-right">
                 <span class="primary--text">
                   <UploadAttachment
                     label="Take Photo"
+                    :name="`pic-${newHeadingIndex + 1}.${
+                      questionIndex + 1
+                    }.png`"
                     @file-selected="
-                      (e) => {
-                        attachments.push({
-                          name: `file-${newHeadingIndex + 1}.${
-                            questionIndex + 1
-                          }.png`,
-                          attachment: e,
-                        });
-                        question.attachment_name = `file-${
-                          newHeadingIndex + 1
-                        }.${questionIndex + 1}.png`;
-                      }
+                      handleFileSelection(
+                        $event,
+                        `pic-${newHeadingIndex + 1}.${questionIndex + 1}.png`,
+                        question
+                      )
                     "
                   />
                 </span>
@@ -90,11 +83,13 @@
                 </span>
 
                 <v-textarea
+                  class="mt-3"
+                  outlined
                   v-model="question.remarks"
                   dense
                   :hide-details="true"
                   v-if="question.isRemarks"
-                  label="Remarks"
+                  label="Note"
                   rows="1"
                   auto-grow
                 ></v-textarea>
@@ -102,182 +97,131 @@
             </v-row>
           </v-card-text>
         </v-card>
-      </v-col>
-    </v-row>
-
-    <v-row>
-      <v-col cols="6" offset="3">
-        <v-toolbar class="primary" rounded dense dark>
-          Defective Area
-        </v-toolbar>
-        <v-card dense class="my-2" rounded>
-          <v-card-title> Any other defects found? </v-card-title>
-
-          <v-card-text>
-            <v-row>
-              <v-col cols="12" class="text-right">
-                <v-textarea
-                  v-model="payload.defective_area"
-                  dense
-                  :hide-details="true"
-                  label="Remarks"
-                  rows="1"
-                  auto-grow
-                ></v-textarea>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col cols="6" offset="3">
-        <v-toolbar class="primary" rounded dense dark> Focus Area </v-toolbar>
-        <v-card dense class="my-2" rounded>
-          <v-card-title>
-            Recommendation (take note of blind spots)
-          </v-card-title>
-
-          <v-card-text>
-            <v-row>
-              <v-col cols="12" class="text-right">
-                <v-textarea
-                  v-model="payload.summary"
-                  dense
-                  :hide-details="true"
-                  label="Remarks"
-                  rows="1"
-                  auto-grow
-                ></v-textarea>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col
-        v-if="payload && payload.sign"
-        cols="6"
-        offset="3"
-        class="text-center"
-      >
-        <v-btn class="primary" block dense dark @click="submit"> Submit </v-btn>
-      </v-col>
-      <v-col v-else cols="6" offset="3">
-        <SignaturePad
-          label="Technician Signature"
-          @sign="
-            (e) => {
-              payload.sign = e;
-            }
-          "
-        />
       </v-col>
     </v-row>
 
     <v-row>
       <v-col cols="12">
-        <v-expansion-panels>
-          <v-expansion-panel v-for="(eqCId, i) in data" :key="i">
-            <v-expansion-panel-header class="primarywhite--text">
-              <h3>{{ eqCId.name }}</h3>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content class="my-1">
-              <v-card
-                outlined
-                v-for="(h, hi) in eqCId.headings"
-                :key="hi"
-                class="mb-2 pa-2"
-              >
-                <p>
-                  <b>{{ hi + 1 }}. {{ h.name }}</b>
-                </p>
+        <v-toolbar class="red" rounded dense dark> Defective Area </v-toolbar>
+        <v-card dense class="my-2" rounded>
+          <v-card-text>
+            <v-row>
+              <v-col cols="12" class="text-right">
+                <v-textarea
+                  outlined
+                  v-model="payload.defective_area"
+                  dense
+                  :hide-details="true"
+                  label="Remarks"
+                  rows="3"
+                ></v-textarea>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="12">
+        <v-toolbar class="blue" rounded dense dark> Report Summary </v-toolbar>
+        <v-card dense class="my-2" rounded>
+          <!-- <v-card-title>
+            <small class="mx-1">
+              Recommendation (take note of blind spots)</small
+            >
+          </v-card-title> -->
 
-                <v-container v-for="(q, qi) in h.questions" :key="qi">
-                  <!-- <p>Question Id. {{ q.id }}</p> -->
-                  <p>{{ qi + 1 }}. {{ q.name }}</p>
+          <v-card-text>
+            <v-row>
+              <v-col cols="12" class="text-right">
+                <v-textarea
+                  outlined
+                  v-model="payload.summary"
+                  dense
+                  :hide-details="true"
+                  label="Summary"
+                  rows="3"
+                ></v-textarea>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
 
-                  <v-radio-group v-model="q.selectedOption" row>
-                    <v-radio
-                      v-for="(option, index) in radioOptions"
-                      :key="index"
-                      :label="option"
-                      :value="option"
-                    ></v-radio>
-                  </v-radio-group>
-                  <v-row no-gutters>
-                    <v-col cols="6" class="my-1">
-                      <v-textarea
-                        dense
-                        :hide-details="true"
-                        outlined
-                        v-model="q.remarks"
-                        label="Remarks"
-                        rows="1"
-                        auto-grow
-                      ></v-textarea>
-                    </v-col>
-                  </v-row>
-                  <v-row no-gutters>
-                    <v-col cols="3">
-                      <UploadAttachment
-                        @file-selected="
-                          (e) => {
-                            q.attachment = e;
-                          }
-                        "
-                      />
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
+      <v-col cols="12">
+        <v-card dense class="my-2" rounded>
+          <v-card-tex>
+            <v-container>
+              <div>Technician Details</div>
+              <v-row>
+                <v-col cols="6">
+                  <v-card
+                    elevation="0"
+                    class="mt-2"
+                    style="width: 175px"
+                    v-if="payload.sign"
+                  >
+                    <v-img :src="payload.sign"></v-img>
+                  </v-card>
+                </v-col>
+                <v-col cols="6">
+                  <v-text-field
+                    readonly
+                    :value="$auth.user.name"
+                    dense
+                    :hide-details="true"
+                    label="Name"
+                  ></v-text-field>
+                  <br />
+                  <v-text-field
+                    readonly
+                    :value="`0553303991`"
+                    dense
+                    :hide-details="true"
+                    label="Phone"
+                  ></v-text-field>
+                  <br />
+                  <v-text-field
+                    readonly
+                    :value="$auth.user.email"
+                    dense
+                    :hide-details="true"
+                    label="Email"
+                  ></v-text-field>
+                  <br />
+                  <v-text-field
+                    readonly
+                    v-model="payload.technician_signed_datetime"
+                    dense
+                    :hide-details="true"
+                    label="Date Time"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-tex>
+          <v-card-text>
+            <SignaturePad
+              label="Technician Signature"
+              @sign="
+                (e) => {
+                  payload.sign = e;
+                }
+              "
+            />
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+      <v-col v-if="payload && payload.sign" cols="12" class="text-center">
+        <v-btn class="green" block dense dark @click="submit"> Submit </v-btn>
       </v-col>
     </v-row>
-    <!-- <v-card v-if="equipmentCategoryId" class="mt-2" outlined elevation="0">
-      <v-container>
-        <p>
-          <b>Upload Before Attachment</b>
-        </p>
-        <v-row no-gutters>
-          <v-col cols="12">
-            <UploadAttachment
-              label="Before Attachment"
-              @file-selected="
-                (e) => {
-                  payload.before_attachment = e;
-                }
-              "
-            />
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-card>
-
-    <v-card v-if="equipmentCategoryId" class="mt-2" outlined elevation="0">
-      <v-container>
-        <p>
-          <b>Upload After Attachment</b>
-        </p>
-        <v-row no-gutters>
-          <v-col cols="12">
-            <UploadAttachment
-              label="After Attachment"
-              @file-selected="
-                (e) => {
-                  payload.after_attachment = e;
-                }
-              "
-            />
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-card> -->
   </v-container>
 </template>
 <script>
 export default {
   props: ["id"],
   data: () => ({
+    currentDateTime: new Date(), // Initialize with current date and time
     attachments: [],
     newHeadings: require("../../headers/questions.json"),
     snack: false,
@@ -289,7 +233,7 @@ export default {
       work_type: "amc",
       sign: null,
       defective_area: null,
-      summary: "write your summary here",
+      summary: "",
     },
     Model: "Equipment",
     options: {},
@@ -312,19 +256,71 @@ export default {
   created() {
     this.$axios.get(this.endpoint).then(({ data }) => {
       this.data = data;
-      console.log(data);
     });
 
     let splitIds = this.$route.params.id.split("_");
     this.payload.equipment_category_id = splitIds[0];
     this.payload.work_id = splitIds[1];
     this.payload.technician_id = this.$auth.user.id;
-  },
 
+    this.formattedDateTime();
+  },
   methods: {
+    formattedDateTime() {
+      const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      const months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      const dayOfWeek = days[this.currentDateTime.getDay()];
+      const dayOfMonth = this.addOrdinalSuffix(this.currentDateTime.getDate());
+      const month = months[this.currentDateTime.getMonth()];
+      const year = this.currentDateTime.getFullYear();
+      const hours = this.padZero(this.currentDateTime.getHours());
+      const minutes = this.padZero(this.currentDateTime.getMinutes());
+
+      this.payload.technician_signed_datetime = `${dayOfWeek} ${dayOfMonth} ${month} ${year} ${hours}:${minutes}`;
+    },
+    addOrdinalSuffix(number) {
+      const suffixes = ["th", "st", "nd", "rd"];
+      const v = number % 100;
+      return number + (suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]);
+    },
+    padZero(number) {
+      return number.toString().padStart(2, "0");
+    },
+    handleFileSelection(e, name, question) {
+      this.attachments.push({
+        name: name,
+        attachment: e,
+      });
+      question["attachment_name"] = name;
+    },
+    getCellStyle(selectedOption, option) {
+      if (selectedOption == option) {
+        if (["Excellent", "Good", "Yes"].includes(selectedOption)) {
+          return "green lighten-2";
+        } else if (["N/A"].includes(selectedOption)) {
+          return "grey lighten-2";
+        } else {
+          return "red lighten-2";
+        }
+      } else {
+        return "";
+      }
+    },
     submit() {
       this.loading = true;
-
       this.$axios
         .post(`/form_entry`, this.payload)
         .then(({ data }) => {

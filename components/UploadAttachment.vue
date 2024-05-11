@@ -7,10 +7,19 @@
       @change="handleFileInputChange"
     />
 
-    <v-icon @click="triggerFileInput" :color="color"
+    <span v-if="isFileSelect">
+      <component
+        :label="name"
+        :key="newDialogKey"
+        icon="mdi-paperclip"
+        :is="currentComponent"
+        :src="preview"
+      />
+    </span>
+    <v-icon class="ml-5" @click="triggerFileInput" :color="color"
       >mdi-camera-outline</v-icon
     >
-    {{ isFileSelect ? "File Selected" : label }}
+    {{ label }}
   </span>
 </template>
 
@@ -21,6 +30,10 @@ export default {
       default: "Upload your attachment",
       type: String,
     },
+    name: {
+      default: "Photo",
+      type: String,
+    },
     color: {
       default: "primary",
       type: String,
@@ -29,6 +42,9 @@ export default {
   data: () => ({
     isFileSelect: false,
     preview: null,
+    currentComponent: null,
+    viewFileSrc: "",
+    newDialogKey: 1,
   }),
   methods: {
     triggerFileInput() {
@@ -44,7 +60,12 @@ export default {
           // this.$emit("file-preview", e.target.result);
           this.preview = e.target.result;
 
+          this.$emit("file-preview", e.target.result);
           this.$emit("file-selected", e.target.result);
+
+          ++this.newDialogKey;
+          this.currentComponent = "ViewFile"; // Set the component name to render
+
           // this.$emit("file-selected", file);
         };
       } else {

@@ -73,66 +73,45 @@
           class="elevation-1"
           :server-items-length="totalRowsCount"
         >
-          <!-- <template
-        v-slot:item.company="{
-          item: {
-            service_call: { contract },
-          },
-          index,
-        }"
-      >
-        <v-card
-          elevation="0"
-          style="background: none"
-          class="d-flex align-center"
-        >
-          <v-avatar class="mr-1">
-            <img
-              :src="
-                contract.company && contract.company.logo
-                  ? contract.company.logo
-                  : '/no-image.png'
-              "
-              alt="Avatar"
-            />
-          </v-avatar>
-          <div class="mt-2">
-            <strong> {{ contract.company && contract.company.name }}</strong>
-            <p>
-              {{ contract.company && contract.company.address }}
-            </p>
-          </div>
-        </v-card>
-      </template> -->
           <template v-slot:item.summary="{ item }">
             <ReadMore :text="item.summary" />
           </template>
 
-          <!-- <template v-slot:item.before_attachment="{ item }">
-            <ViewAttachment
-              v-if="item.before_attachment"
-              :src="item.before_attachment"
-            />
-          </template>
-          <template v-slot:item.after_attachment="{ item }">
-            <ViewAttachment
-              v-if="item.after_attachment"
-              :src="item.after_attachment"
-            />
-          </template> -->
-
           <template v-slot:item.service_call="{ item }">
             Reference Id: {{ item.service_call_id }}
-            <!-- <v-chip dark small :color="statusRelatedColor(item.service_call.status)">{{
-                item.service_call
-              }}</v-chip> -->
           </template>
 
-          <template v-slot:item.customer_sign="{ item }">
+          <template v-slot:item.photos="{ item }">
+            <div v-if="item.checklists">
+              <ViewMultiplePhotos
+                label="Photos"
+                :form_entry_id="item.id"
+                :photos="
+                  item.checklists[0].checklist.flatMap((entry) =>
+                    entry.questions
+                      .filter(
+                        (question) => question.attachment_name !== undefined
+                      )
+                      .map((question) => question.attachment_name)
+                  )
+                "
+              />
+            </div>
+          </template>
+
+          <template v-slot:item.technician="{ item }">
+            <div>{{ item.technician.name }}</div>
+            <small>{{ item.technician.number ?? "0553303991" }}</small>
+          </template>
+
+          <template v-slot:item.customer="{ item }">
             <v-chip v-if="!item.customer_sign" dark small class="blue"
               >Pending</v-chip
             >
-            <ViewFile v-else :src="`http://192.168.2.24:8001/customer_sign/${item.customer_sign}`"/>
+            <div v-else>
+              <div>{{ item.customer_name }}</div>
+              <small>{{ item.customer_phone ?? "0553303991" }}</small>
+            </div>
           </template>
 
           <template v-slot:item.options="{ item }">
@@ -143,10 +122,15 @@
                 </v-btn>
               </template>
               <v-list width="150" dense>
-                <v-list-item>
+                <v-list-item v-if="!item.customer_sign">
                   <v-list-item-title @click="moveTo(`/amc/edit/${item.id}`)">
-                    <v-icon small color="black">mdi-pencil</v-icon> Edit 
-                    <!-- <FormEntryTableView :items="item.checklists" /> -->
+                    <v-icon small color="black">mdi-pencil</v-icon> Edit
+                  </v-list-item-title>
+                </v-list-item>
+
+                <v-list-item v-if="item.customer_sign">
+                  <v-list-item-title @click="moveTo(`/amc/print/${item.id}`)">
+                    <v-icon small color="black">mdi-pencil</v-icon> Print
                   </v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -176,6 +160,24 @@ export default {
     technicians: [],
     headers: [
       {
+        text: "Company",
+        align: "left",
+        sortable: true,
+        key: "amc.contract.company.name",
+        value: "amc.contract.company.name",
+        filterable: true,
+        filterSpecial: false,
+      },
+      {
+        text: "Created Date",
+        align: "left",
+        sortable: true,
+        key: "date",
+        value: "date",
+        filterable: true,
+        filterSpecial: false,
+      },
+      {
         text: "Job Type",
         align: "left",
         sortable: true,
@@ -194,16 +196,25 @@ export default {
         filterSpecial: false,
       },
       {
-        text: "Defective Area",
+        text: "Technician",
         align: "left",
         sortable: true,
-        key: "defective_area",
-        value: "defective_area",
+        key: "technician",
+        value: "technician",
         filterable: true,
         filterSpecial: false,
       },
       {
-        text: "Remarks",
+        text: "Signed By",
+        align: "left",
+        sortable: true,
+        key: "customer",
+        value: "customer",
+        filterable: true,
+        filterSpecial: false,
+      },
+      {
+        text: "View Summary",
         align: "left",
         sortable: true,
         key: "summary",
@@ -212,56 +223,11 @@ export default {
         filterSpecial: false,
       },
       {
-        text: "Customer Name",
+        text: "View Photos",
         align: "left",
         sortable: true,
-        key: "customer_name",
-        value: "customer_name",
-        filterable: true,
-        filterSpecial: false,
-      },
-      {
-        text: "Customer Phone",
-        align: "left",
-        sortable: true,
-        key: "customer_phone",
-        value: "customer_phone",
-        filterable: true,
-        filterSpecial: false,
-      },
-      {
-        text: "Customer Sign",
-        align: "left",
-        sortable: true,
-        key: "customer_sign",
-        value: "customer_sign",
-        filterable: true,
-        filterSpecial: false,
-      },
-      // {
-      //   text: "Before Attachment",
-      //   align: "left",
-      //   sortable: true,
-      //   key: "before_attachment",
-      //   value: "before_attachment",
-      //   filterable: true,
-      //   filterSpecial: false,
-      // },
-      // {
-      //   text: "After Attachment",
-      //   align: "left",
-      //   sortable: true,
-      //   key: "after_attachment",
-      //   value: "after_attachment",
-      //   filterable: true,
-      //   filterSpecial: false,
-      // },
-      {
-        text: "Created Date",
-        align: "left",
-        sortable: true,
-        key: "date",
-        value: "date",
+        key: "photos",
+        value: "photos",
         filterable: true,
         filterSpecial: false,
       },

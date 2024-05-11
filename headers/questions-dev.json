@@ -9,6 +9,14 @@
         "question": "Overall physical inspection of the camera?",
         "options": ["Excellent", "Good", "Poor"],
         "attachment_name": null
+      },
+      {
+        "selectedOption": null,
+        "remarks": null,
+        "isRemarks": false,
+        "question": "Is the camera lens focused and properly adjusted?",
+        "options": ["Yes", "No", "N/A"],
+        "attachment_name": null
       }
     ]
   }
