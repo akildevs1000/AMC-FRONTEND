@@ -161,16 +161,7 @@
             <v-container>
               <div>Customer action required</div>
               <v-row>
-                <v-col cols="6">
-                  <v-card
-                    elevation="0"
-                    class="mt-2"
-                    style="width: 175px"
-                    v-if="payload.customer_sign"
-                  >
-                    <v-img :src="payload.customer_sign"></v-img>
-                  </v-card>
-                </v-col>
+                
                 <v-col cols="6">
                   <v-text-field
                     v-model="payload.customer_name"
@@ -194,6 +185,17 @@
                     :hide-details="true"
                     label="Date Time"
                   ></v-text-field>
+                </v-col>
+
+                <v-col cols="6" class="d-flex justify-center">
+                  <v-card
+                    elevation="0"
+                    class="mt-2"
+                    style="width: 175px"
+                    v-if="payload.customer_sign"
+                  >
+                    <v-img :src="payload.customer_sign"></v-img>
+                  </v-card>
                 </v-col>
               </v-row>
             </v-container>

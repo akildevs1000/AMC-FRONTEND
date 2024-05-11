@@ -124,6 +124,12 @@
               <v-list width="150" dense>
                 <v-list-item v-if="!item.customer_sign">
                   <v-list-item-title @click="moveTo(`/amc/edit/${item.id}`)">
+                    <v-icon small color="black">mdi-pen</v-icon> Manager Sign
+                  </v-list-item-title>
+                </v-list-item>
+
+                <v-list-item v-if="!item.customer_sign">
+                  <v-list-item-title @click="moveTo(`/amc/edit/${item.id}`)">
                     <v-icon small color="black">mdi-pencil</v-icon> Edit
                   </v-list-item-title>
                 </v-list-item>

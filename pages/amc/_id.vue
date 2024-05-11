@@ -27,7 +27,7 @@
             >
           </v-card-title>
 
-          <v-card-text>
+          <v-container>
             <v-row>
               <v-col
                 cols="4"
@@ -95,7 +95,7 @@
                 ></v-textarea>
               </v-col>
             </v-row>
-          </v-card-text>
+          </v-container>
         </v-card>
       </v-col>
     </v-row>
@@ -111,7 +111,12 @@
                   outlined
                   v-model="payload.defective_area"
                   dense
-                  :hide-details="true"
+                  :hide-details="!errors.defective_area"
+                  :error-messages="
+                    errors && errors.defective_area
+                      ? errors.defective_area[0]
+                      : ''
+                  "
                   label="Remarks"
                   rows="3"
                 ></v-textarea>
@@ -121,14 +126,10 @@
         </v-card>
       </v-col>
       <v-col cols="12">
-        <v-toolbar class="blue" rounded dense dark> Report Summary </v-toolbar>
+        <v-toolbar class="blue" rounded dense dark>
+          Report Summary {{ errors.summary }}
+        </v-toolbar>
         <v-card dense class="my-2" rounded>
-          <!-- <v-card-title>
-            <small class="mx-1">
-              Recommendation (take note of blind spots)</small
-            >
-          </v-card-title> -->
-
           <v-card-text>
             <v-row>
               <v-col cols="12" class="text-right">
@@ -136,7 +137,10 @@
                   outlined
                   v-model="payload.summary"
                   dense
-                  :hide-details="true"
+                  :hide-details="!errors.summary"
+                  :error-messages="
+                    errors && errors.summary ? errors.summary[0] : ''
+                  "
                   label="Summary"
                   rows="3"
                 ></v-textarea>
@@ -150,17 +154,9 @@
         <v-card dense class="my-2" rounded>
           <v-card-tex>
             <v-container>
-              <div>Technician Details</div>
               <v-row>
-                <v-col cols="6">
-                  <v-card
-                    elevation="0"
-                    class="mt-2"
-                    style="width: 175px"
-                    v-if="payload.sign"
-                  >
-                    <v-img :src="payload.sign"></v-img>
-                  </v-card>
+                <v-col cols="12">
+                  <div>Technician Details</div>
                 </v-col>
                 <v-col cols="6">
                   <v-text-field
@@ -195,6 +191,16 @@
                     label="Date Time"
                   ></v-text-field>
                 </v-col>
+                <v-col cols="6" class="d-flex justify-center">
+                  <v-card
+                    elevation="0"
+                    class="mt-2"
+                    style="width: 175px"
+                    v-if="payload.sign"
+                  >
+                    <v-img :src="payload.sign"></v-img>
+                  </v-card>
+                </v-col>
               </v-row>
             </v-container>
           </v-card-tex>
@@ -210,9 +216,8 @@
           </v-card-text>
         </v-card>
       </v-col>
-
       <v-col v-if="payload && payload.sign" cols="12" class="text-center">
-        <v-btn class="green" block dense dark @click="submit"> Submit </v-btn>
+        <v-btn class="green" block dense dark @click="submit"> Submit</v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -223,7 +228,7 @@ export default {
   data: () => ({
     currentDateTime: new Date(), // Initialize with current date and time
     attachments: [],
-    newHeadings: require("../../headers/questions.json"),
+    newHeadings: require("../../headers/questions-dev.json"),
     snack: false,
     checkListPayload: {},
     payload: {
@@ -319,6 +324,23 @@ export default {
         return "";
       }
     },
+
+    validatePayload() {
+      this.loading = true;
+      this.payload.questions = this.newHeadings;
+      this.$axios
+        .post(`/form_entry_validate`, this.payload)
+        .then(({ data }) => {
+          this.loading = false;
+          if (!data.status) {
+            this.errors = data.errors;
+          } else {
+            this.submit();
+          }
+        })
+        .catch(({ response }) => this.handleErrorResponse(response));
+    },
+
     submit() {
       this.loading = true;
       this.$axios
@@ -446,6 +468,7 @@ Akil Security
     },
     handleErrorResponse(response) {
       console.log(response);
+      console.log(`francis`);
       this.loading = false;
       if (!response) {
         return;
