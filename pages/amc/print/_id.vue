@@ -135,6 +135,27 @@
       </v-col>
 
       <v-col cols="12">
+        <v-toolbar class="blue" rounded dense dark> Customer Comments </v-toolbar>
+        <v-card dense class="my-2" rounded>
+          <v-card-text>
+            <v-row>
+              <v-col cols="12" class="text-right">
+                <v-textarea
+                  outlined
+                  v-model="payload.customer_note"
+                  dense
+                  :hide-details="true"
+                  label="Customer Note"
+                  rows="3"
+                ></v-textarea>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+        <v-divider></v-divider>
+      </v-col>
+
+      <v-col cols="12">
         <v-card dense class="my-2" rounded>
           <v-card-tex>
             <v-container>
@@ -162,13 +183,6 @@
                     v-model="payload.customer_phone"
                     label="Phone"
                     :value="`0553303991`"
-                    dense
-                    :hide-details="true"
-                  ></v-text-field>
-                  <br />
-                  <v-text-field
-                    v-model="payload.customer_note"
-                    label="Note"
                     dense
                     :hide-details="true"
                   ></v-text-field>
@@ -313,6 +327,8 @@ export default {
         customer_name: this.payload.customer_name,
         customer_phone: this.payload.customer_phone,
         customer_sign: this.payload.customer_sign,
+        customer_note: this.payload.customer_note,
+        customer_signed_datetime: this.payload.customer_signed_datetime,
       };
       this.loading = true;
       this.$axios
