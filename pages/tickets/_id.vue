@@ -54,7 +54,7 @@
               </tr>
               <tr>
                 <th>Prority</th>
-                <td>{{ item.priority.name }}</td>
+                <td>{{ item?.priority?.name }}</td>
               </tr>
               <tr>
                 <th>Attachment</th>

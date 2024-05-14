@@ -52,7 +52,7 @@
           <v-list-item
             v-for="(listItem, index) in equipmentCategoryList"
             :key="index"
-            @click="navigate(`/amc/${listItem.id}_${item.id}`)"
+            @click="navigate(listItem, item.id)"
           >
             <v-list-item-title>
               {{ listItem.name }}
@@ -127,9 +127,16 @@ export default {
     },
   },
   methods: {
-    navigate(route) {
-      // Perform navigation based on item.route (e.g., using Vue Router)
-      console.log("Navigate to:", route);
+    navigate(selectedEquipment, id) {
+      const route = {
+        path: `/amc/${id}`,
+        query: {
+          id: selectedEquipment.id,
+          name: selectedEquipment.name,
+          slug: selectedEquipment.slug,
+        },
+      };
+
       this.$router.push(route);
     },
     getCapitalFirstLetters(name) {

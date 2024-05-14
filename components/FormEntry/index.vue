@@ -51,7 +51,7 @@
               color="primary"
               label="Select Technician"
               dense
-              @click="getDataFromApi()"
+              @click="getDataFromApi"
               >Submit</v-btn
             >
           </v-col>
@@ -82,19 +82,11 @@
           </template>
 
           <template v-slot:item.photos="{ item }">
-            <div v-if="item.checklists">
+            <div v-if="item.checklist">
               <ViewMultiplePhotos
                 label="Photos"
                 :form_entry_id="item.id"
-                :photos="
-                  item.checklists[0].checklist.flatMap((entry) =>
-                    entry.questions
-                      .filter(
-                        (question) => question.attachment_name !== undefined
-                      )
-                      .map((question) => question.attachment_name)
-                  )
-                "
+                :photos="item.checklist.checklist"
               />
             </div>
           </template>
@@ -122,21 +114,38 @@
                 </v-btn>
               </template>
               <v-list width="150" dense>
-                <v-list-item v-if="!item.customer_sign">
-                  <v-list-item-title @click="moveTo(`/amc/edit/${item.id}`)">
+                <v-list-item>
+                  <v-list-item-title @click="moveTo(`/amc/sign/${item.id}`)">
                     <v-icon small color="black">mdi-pen</v-icon> Manager Sign
                   </v-list-item-title>
                 </v-list-item>
 
-                <v-list-item v-if="!item.customer_sign">
+                <!-- v-if="item.customer_sign" -->
+                <v-list-item>
                   <v-list-item-title @click="moveTo(`/amc/edit/${item.id}`)">
                     <v-icon small color="black">mdi-pencil</v-icon> Edit
                   </v-list-item-title>
                 </v-list-item>
 
-                <v-list-item v-if="item.customer_sign">
-                  <v-list-item-title @click="moveTo(`/amc/print/${item.id}`)">
-                    <v-icon small color="black">mdi-pencil</v-icon> Print
+                <v-list-item>
+                  <v-list-item-title @click="moveTo(`/amc/view/${item.id}`)">
+                    <v-icon small color="black">mdi-eye</v-icon> View
+                  </v-list-item-title>
+                </v-list-item>
+
+                <v-list-item>
+                  <v-list-item-title>
+                    <v-icon small color="black">mdi-download</v-icon> Download
+                  </v-list-item-title>
+                </v-list-item>
+
+                <v-list-item>
+                  <v-list-item-title>
+                    <Delete
+                      :id="item.id"
+                      :endpoint="endpoint"
+                      @success="() => getDataFromApi"
+                    />
                   </v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -152,6 +161,7 @@
 export default {
   components: {},
   props: ["id"],
+
   data: () => ({
     totalRowsCount: 0,
     filters: {},

@@ -5,6 +5,9 @@
         {{ response }}
       </v-snackbar>
     </div>
+    <!-- <v-card outlined>
+      <pre>{{ checkListPayload }}</pre>
+    </v-card> -->
     <v-row
       v-for="(newHeading, newHeadingIndex) in newHeadings"
       :key="newHeadingIndex"
@@ -14,13 +17,6 @@
           {{ newHeadingIndex + 1 }}. {{ newHeading.heading }}
         </v-toolbar>
         <v-card
-          :style="`border:1px solid ${
-            errors[
-              `checklist.${newHeadingIndex}.questions.${questionIndex}.selectedOption`
-            ]
-              ? 'red'
-              : 'white'
-          }`"
           dense
           class="my-2"
           rounded
@@ -34,7 +30,7 @@
             >
           </v-card-title>
 
-          <v-container>
+          <v-card-text>
             <v-row>
               <v-col
                 cols="4"
@@ -43,7 +39,6 @@
                 :key="optionIndex"
               >
                 <v-card
-                  @click="question.selectedOption = option"
                   style="border: 1px #cfc9c9 solid; border-radius: 10px"
                   elevation="0"
                   :class="getCellStyle(question.selectedOption, option)"
@@ -58,44 +53,20 @@
                   </v-card-text>
                 </v-card>
               </v-col>
-              <v-col cols="6">
+
+              <v-col cols="12" class="text-right">
                 <span
-                  class="red--text"
-                  v-if="
-                    errors[
-                      `checklist.${newHeadingIndex}.questions.${questionIndex}.selectedOption`
-                    ]
-                  "
+                  class="primary--text"
+                  v-if="question && question.attachment_name"
                 >
-                  Option must be selected
-                </span>
-              </v-col>
-              <v-col cols="6" class="text-right">
-                <span class="primary--text">
-                  <UploadAttachment
-                    label="Take Photo"
-                    :name="`pic-${newHeadingIndex + 1}.${
-                      questionIndex + 1
-                    }.png`"
-                    @file-selected="
-                      handleFileSelection(
-                        $event,
-                        `pic-${newHeadingIndex + 1}.${questionIndex + 1}.png`,
-                        question
-                      )
-                    "
+                  <ViewFile
+                    icon="mdi-paperclip"
+                    :label="question.attachment_name"
+                    :src="`http://192.168.2.24:8001/checklist/${form_entry_id}/${question.attachment_name}`"
                   />
                 </span>
-                <span
-                  @click="
-                    () => {
-                      question.isRemarks = !question.isRemarks;
-                      question.remarks = null;
-                    }
-                  "
-                  class="primary--text"
-                >
-                  <v-icon class="ml-5" color="primary"
+                <span class="grey--text">
+                  <v-icon class="ml-5" color="grey"
                     >mdi-clipboard-outline</v-icon
                   >
                   Add Note
@@ -104,6 +75,7 @@
                 <v-textarea
                   class="mt-3"
                   outlined
+                  readonly
                   v-model="question.remarks"
                   dense
                   :hide-details="true"
@@ -114,7 +86,7 @@
                 ></v-textarea>
               </v-col>
             </v-row>
-          </v-container>
+          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
@@ -122,17 +94,13 @@
     <v-row>
       <v-col cols="12">
         <v-toolbar class="red" rounded dense dark> Defective Area </v-toolbar>
-        <v-card
-          dense
-          class="my-2"
-          rounded
-          :style="`border:1px solid ${errors.defective_area ? 'red' : 'white'}`"
-        >
-          <v-container>
+        <v-card dense class="my-2" rounded>
+          <v-card-text>
             <v-row>
               <v-col cols="12" class="text-right">
                 <v-textarea
                   outlined
+                  readonly
                   v-model="payload.defective_area"
                   dense
                   :hide-details="true"
@@ -140,30 +108,19 @@
                   rows="3"
                 ></v-textarea>
               </v-col>
-              <v-col v-if="errors.defective_area">
-                <span class="red--text">
-                  {{ errors.defective_area[0] }}
-                </span>
-              </v-col>
             </v-row>
-          </v-container>
+          </v-card-text>
         </v-card>
       </v-col>
       <v-col cols="12">
-        <v-toolbar class="blue" rounded dense dark>
-          Report Summary
-        </v-toolbar>
-        <v-card
-          dense
-          class="my-2"
-          rounded
-          :style="`border:1px solid ${errors.summary ? 'red' : 'white'}`"
-        >
-          <v-container>
+        <v-toolbar class="blue" rounded dense dark> Report Summary </v-toolbar>
+        <v-card dense class="my-2" rounded>
+          <v-card-text>
             <v-row>
               <v-col cols="12" class="text-right">
                 <v-textarea
                   outlined
+                  readonly
                   v-model="payload.summary"
                   dense
                   :hide-details="true"
@@ -171,14 +128,33 @@
                   rows="3"
                 ></v-textarea>
               </v-col>
-              <v-col v-if="errors.summary">
-                <span class="red--text">
-                  {{ errors.summary[0] }}
-                </span>
+            </v-row>
+          </v-card-text>
+        </v-card>
+        <v-divider></v-divider>
+      </v-col>
+
+      <v-col cols="12">
+        <v-toolbar class="blue" rounded dense dark>
+          Customer Comments
+        </v-toolbar>
+        <v-card dense class="my-2" rounded>
+          <v-card-text>
+            <v-row>
+              <v-col cols="12" class="text-right">
+                <v-textarea
+                  outlined
+                  v-model="payload.customer_note"
+                  dense
+                  :hide-details="true"
+                  label="Customer Note"
+                  rows="3"
+                ></v-textarea>
               </v-col>
             </v-row>
-          </v-container>
+          </v-card-text>
         </v-card>
+        <v-divider></v-divider>
       </v-col>
 
       <v-col cols="12">
@@ -187,77 +163,90 @@
             <v-container>
               <v-row>
                 <v-col cols="12">
-                  <div>Technician Details</div>
+                  <div>Customer action required</div>
                 </v-col>
                 <v-col cols="6">
-                  <v-text-field
-                    readonly
-                    :value="$auth.user.name"
+                  <v-autocomplete
+                    @change="getRelatedCustomerInfo(payload.manager_id)"
+                    v-model="payload.manager_id"
+                    label="Select Customer"
+                    :items="customers"
+                    item-text="name"
+                    item-value="id"
                     dense
                     :hide-details="true"
-                    label="Name"
-                  ></v-text-field>
-                  <br />
+                  ></v-autocomplete>
+                  <!-- <br />
                   <v-text-field
-                    readonly
-                    :value="`0553303991`"
-                    dense
-                    :hide-details="true"
-                    label="Phone"
-                  ></v-text-field>
-                  <br />
-                  <v-text-field
-                    readonly
-                    :value="$auth.user.email"
-                    dense
-                    :hide-details="true"
+                    v-model="payload.customer_email"
                     label="Email"
+                    dense
+                    :hide-details="true"
+                  ></v-text-field> -->
+                  <br />
+                  <v-text-field
+                    v-model="payload.customer_phone"
+                    label="Phone"
+                    dense
+                    :hide-details="true"
+                  ></v-text-field>
+                  <br />
+                  <v-text-field
+                    v-model="payload.customer_position"
+                    label="Position"
+                    dense
+                    :hide-details="true"
                   ></v-text-field>
                   <br />
                   <v-text-field
                     readonly
-                    v-model="payload.technician_signed_datetime"
+                    v-model="payload.customer_signed_datetime"
                     dense
                     :hide-details="true"
                     label="Date Time"
                   ></v-text-field>
                 </v-col>
+
                 <v-col cols="6" class="d-flex justify-center">
                   <v-card
                     elevation="0"
                     class="mt-2"
                     style="width: 175px"
-                    v-if="payload.sign"
+                    v-if="payload.customer_sign"
                   >
-                    <v-img :src="payload.sign"></v-img>
+                    <v-img :src="payload.customer_sign"></v-img>
                   </v-card>
-                </v-col>
-                <v-col cols="12">
-                  <SignaturePad
-                    label="Technician Signature"
-                    @sign="
-                      (e) => {
-                        payload.sign = e;
-                      }
-                    "
-                  />
                 </v-col>
               </v-row>
             </v-container>
           </v-card-text>
+          <v-card-text>
+            <SignaturePad
+              label="Signature"
+              @sign="
+                (e) => {
+                  payload.customer_sign = e;
+                }
+              "
+            />
+          </v-card-text>
         </v-card>
       </v-col>
-      <v-col v-if="payload && payload.sign" cols="12" class="text-center">
-        <v-btn
-          :loading="loading"
-          class="green"
-          block
-          dense
-          dark
-          @click="validatePayload"
-        >
-          Submit</v-btn
-        >
+
+      <v-col cols="12" class="text-center">
+        <v-card-text>
+          <v-btn
+            :loading="loading"
+            v-if="payload && payload.customer_sign"
+            class="green"
+            block
+            dense
+            dark
+            @click="submit"
+          >
+            Submit
+          </v-btn>
+        </v-card-text>
       </v-col>
     </v-row>
   </v-container>
@@ -266,20 +255,21 @@
 export default {
   props: ["id"],
   data: () => ({
+    loading: false,
     currentDateTime: new Date(), // Initialize with current date and time
     attachments: [],
     newHeadings: [],
     snack: false,
     checkListPayload: {},
     payload: {
-      technician_id: 0,
       work_id: 0,
       equipment_category_id: 0,
-      work_type: "amc",
       sign: null,
-      defective_area: null,
+      defective_area: "",
       summary: "",
+      customer_sign: null,
     },
+    customers: [],
     Model: "Equipment",
     options: {},
     endpoint: "equipmentCategoryWithQuestionsList",
@@ -296,28 +286,46 @@ export default {
     response: "",
     errors: [],
     item: {},
-    equipmentCategoryObj: null,
+    form_entry_id: 0,
   }),
 
-  mounted() {
-    this.equipmentCategoryObj = this.$route.query;
-    let example = this.$route.query.example || false;
-    let isExample = example == "true" || example == "1" ? "-example" : "";
-    this.newHeadings = require(`@/jsons/questions/${this.equipmentCategoryObj.slug}${isExample}.json`);
-  },
-
   created() {
-    this.$axios.get(this.endpoint).then(({ data }) => {
-      this.data = data;
+    this.form_entry_id = this.$route.params.id;
+    this.$axios.get(`/form_entry/${this.$route.params.id}`).then(({ data }) => {
+      this.payload = data;
+      this.newHeadings = data.checklist.checklist;
+      this.payload.customer_signed_datetime = this.formattedDateTime();
     });
 
-    this.payload.equipment_category_id = this.$route.query.id;
-    this.payload.work_id = this.$route.params.id;
-    this.payload.technician_id = this.$auth.user.id;
-
-    this.formattedDateTime();
+    this.$axios
+      .get(`/manager`, { company_id: 0 })
+      .then(({ data }) => {
+        this.customers = data.data;
+      })
+      .catch((e) => console.log(e));
   },
+
   methods: {
+    getRelatedCustomerInfo(id) {
+      let found = this.customers.find((e) => e.id == id);
+      this.payload.customer_name = found.name;
+      this.payload.customer_email = found.email;
+      this.payload.customer_position = found.position;
+      this.payload.customer_phone = found.phone_number;
+    },
+    getCellStyle(selectedOption, option) {
+      if (selectedOption == option) {
+        if (["Excellent", "Good", "Yes"].includes(selectedOption)) {
+          return "green lighten-2";
+        } else if (["N/A"].includes(selectedOption)) {
+          return "grey lighten-2";
+        } else {
+          return "red lighten-2";
+        }
+      } else {
+        return "";
+      }
+    },
     formattedDateTime() {
       const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
       const months = [
@@ -341,7 +349,7 @@ export default {
       const hours = this.padZero(this.currentDateTime.getHours());
       const minutes = this.padZero(this.currentDateTime.getMinutes());
 
-      this.payload.technician_signed_datetime = `${dayOfWeek} ${dayOfMonth} ${month} ${year} ${hours}:${minutes}`;
+      return `${dayOfWeek} ${dayOfMonth} ${month} ${year} ${hours}:${minutes}`;
     },
     addOrdinalSuffix(number) {
       const suffixes = ["th", "st", "nd", "rd"];
@@ -351,92 +359,47 @@ export default {
     padZero(number) {
       return number.toString().padStart(2, "0");
     },
-    handleFileSelection(e, name, question) {
-      this.attachments.push({
-        name: name,
-        attachment: e,
-      });
-      question["attachment_name"] = name;
-    },
-    getCellStyle(selectedOption, option) {
-      if (selectedOption == option) {
-        if (["Excellent", "Good", "Yes"].includes(selectedOption)) {
-          return "green lighten-2";
-        } else if (["N/A"].includes(selectedOption)) {
-          return "grey lighten-2";
-        } else {
-          return "red lighten-2";
-        }
-      } else {
-        return "";
-      }
-    },
-
-    validatePayload() {
-      this.loading = true;
-      this.payload.checklist = this.newHeadings;
-      this.$axios
-        .post(`/form_entry/validate`, this.payload)
-        .then(({ data }) => {
-          this.loading = false;
-          if (!data.status) {
-            this.errors = data.errors;
-          } else {
-            this.submit();
-          }
-        })
-        .catch(({ response }) => this.handleErrorResponse(response));
-    },
-
     submit() {
       this.loading = true;
-      this.$axios
-
-        .post(`/form_entry`, this.payload)
-        .then(({ data }) => {
-          this.loading = false;
-          if (!data.status) {
-            this.errors = data.errors;
-          } else {
-            this.processCheckListV1(data.record.id);
-          }
-        })
-        .catch(({ response }) => this.handleErrorResponse(response));
-    },
-
-    processCheckListV1(id = 1) {
-      this.loading = true;
-      this.checkListPayload = {
-        form_entry_id: id,
-        checklist: this.payload.checklist,
-        attachments: this.attachments,
+      let payload = {
+        customer_name: this.payload.customer_name,
+        customer_phone: this.payload.customer_phone,
+        customer_sign: this.payload.customer_sign,
+        customer_note: this.payload.customer_note,
+        customer_signed_datetime: this.payload.customer_signed_datetime,
       };
-
+      this.loading = true;
       this.$axios
-        .post(`/checklist`, this.checkListPayload)
+        .post(`/form_entry/customer_update/${this.form_entry_id}`, payload)
         .then(({ data }) => {
           this.loading = false;
           if (!data.status) {
             this.errors = data.errors;
           } else {
-            // this.updateServiceCallStatus();
-            alert("Form has been added");
-            window.history.back();
+            this.sendWhatsapp();
           }
         })
         .catch(({ response }) => this.handleErrorResponse(response));
     },
-
+    updateServiceCallStatus() {
+      this.$axios
+        .put(`/service_call/${this.form_entry_id}`, { status: "Completed" })
+        .then(({ data }) => {
+          this.errors = [];
+          // this.sendWhatsapp();
+        })
+        .catch(({ response }) => this.handleErrorResponse(response));
+    },
     sendWhatsapp() {
       this.whatsappPayload = {
-        number: this.item.contract.company.contact_number,
+        number: this.payload.customer_phone,
         message: `🔧 *Service Update* 🔧
 
-Hello *${this.item.contract.company.name}*,
+Hello *${this.payload.customer_name}*,
 
 This is confirmation message from Akil Security regarding the update of the Service.
 
-Reference Number # *${this.item.id}*,
+Reference Number # *${this.form_entry_id}*,
 
 🔍 *Summary	:*
 ${this.payload.summary}
@@ -454,13 +417,13 @@ Akil Security
         .post(`/sendWhatsapp`, this.whatsappPayload)
         .then(({ data }) => {
           this.errors = [];
-          alert("Form has been added");
-          console.log(data);
-          this.$router.push("/");
+          alert("Checklist has been signed");
+          window.history.back();
         })
         .catch(({ response }) => this.handleErrorResponse(response));
     },
     handleErrorResponse(response) {
+      console.log(response);
       this.loading = false;
       if (!response) {
         return;

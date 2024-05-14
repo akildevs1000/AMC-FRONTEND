@@ -20,7 +20,7 @@
     <!-- Main content area -->
     <v-app-bar app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>Welcome, {{$auth.user.name}}</v-toolbar-title>
+      <v-toolbar-title>Welcome, {{ $auth.user.name }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn text @click="logout"><v-icon>mdi-logout</v-icon></v-btn>
     </v-app-bar>
@@ -36,6 +36,16 @@
 
 <script>
 export default {
+  head() {
+    return {
+      link: [
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap",
+        },
+      ],
+    };
+  },
   data() {
     return {
       drawer: false, // Controls the drawer visibility
@@ -66,5 +76,9 @@ export default {
 </script>
 
 <style>
-/* Add any custom styles here */
+* {
+  font-family: "Source Sans Pro", sans-serif !important;
+  margin: 0;
+  padding: 0;
+}
 </style>

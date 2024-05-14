@@ -135,7 +135,9 @@
       </v-col>
 
       <v-col cols="12">
-        <v-toolbar class="blue" rounded dense dark> Customer Comments </v-toolbar>
+        <v-toolbar class="blue" rounded dense dark>
+          Customer Comments
+        </v-toolbar>
         <v-card dense class="my-2" rounded>
           <v-card-text>
             <v-row>
@@ -157,19 +159,11 @@
 
       <v-col cols="12">
         <v-card dense class="my-2" rounded>
-          <v-card-tex>
+          <v-card-text>
             <v-container>
-              <div>Customer action required</div>
               <v-row>
-                <v-col cols="6">
-                  <v-card
-                    elevation="0"
-                    class="mt-2"
-                    style="width: 175px"
-                    v-if="payload.customer_sign"
-                  >
-                    <v-img :src="payload.customer_sign"></v-img>
-                  </v-card>
+                <v-col cols="12">
+                  <div>Customer action required</div>
                 </v-col>
                 <v-col cols="6">
                   <v-text-field
@@ -182,7 +176,6 @@
                   <v-text-field
                     v-model="payload.customer_phone"
                     label="Phone"
-                    :value="`0553303991`"
                     dense
                     :hide-details="true"
                   ></v-text-field>
@@ -195,9 +188,20 @@
                     label="Date Time"
                   ></v-text-field>
                 </v-col>
+
+                <v-col cols="6" class="d-flex justify-center">
+                  <v-card
+                    elevation="0"
+                    class="mt-2"
+                    style="width: 175px"
+                    v-if="payload.customer_sign"
+                  >
+                    <v-img :src="payload.customer_sign"></v-img>
+                  </v-card>
+                </v-col>
               </v-row>
             </v-container>
-          </v-card-tex>
+          </v-card-text>
           <v-card-text>
             <SignaturePad
               label="Signature"
@@ -214,8 +218,9 @@
       <v-col cols="12" class="text-center">
         <v-card-text>
           <v-btn
+            :loading="loading"
             v-if="payload && payload.customer_sign"
-            class="primary"
+            class="green"
             block
             dense
             dark
@@ -232,6 +237,7 @@
 export default {
   props: ["id"],
   data: () => ({
+    loading: false,
     currentDateTime: new Date(), // Initialize with current date and time
     attachments: [],
     newHeadings: [],
@@ -267,9 +273,8 @@ export default {
   created() {
     this.form_entry_id = this.$route.params.id;
     this.$axios.get(`/form_entry/${this.$route.params.id}`).then(({ data }) => {
-      this.payload.defective_area = data.defective_area;
-      this.payload.summary = data.summary;
-      this.newHeadings = data.checklists[0].checklist;
+      this.payload = data;
+      this.newHeadings = data.checklist.checklist;
     });
 
     this.formattedDateTime();
@@ -323,6 +328,7 @@ export default {
       return number.toString().padStart(2, "0");
     },
     submit() {
+      this.loading = true;
       let payload = {
         customer_name: this.payload.customer_name,
         customer_phone: this.payload.customer_phone,
@@ -338,52 +344,18 @@ export default {
           if (!data.status) {
             this.errors = data.errors;
           } else {
-            alert("Form has been modified");
+            alert("Checklist has been authorized");
+            window.history.back();
           }
         })
         .catch(({ response }) => this.handleErrorResponse(response));
     },
-
     updateServiceCallStatus() {
       this.$axios
-        .put(`/service_call/${this.$route.params.id}`, { status: "Completed" })
+        .put(`/service_call/${this.form_entry_id}`, { status: "Completed" })
         .then(({ data }) => {
           this.errors = [];
           // this.sendWhatsapp();
-        })
-        .catch(({ response }) => this.handleErrorResponse(response));
-    },
-
-    sendWhatsapp() {
-      this.whatsappPayload = {
-        number: this.item.contract.company.contact_number,
-        message: `🔧 *Service Update* 🔧
-
-Hello *${this.item.contract.company.name}*,
-
-This is confirmation message from Akil Security regarding the update of the Service.
-
-Reference Number # *${this.item.id}*,
-
-🔍 *Summary	:*
-${this.payload.summary}
-
-📞 *Contact:*
-If you have any questions or concerns, feel free to reach out to me at +971 52 904 8025 or reply to this message.
-
-Thank you for your patience!
-
-Best regards,
-Akil Security
-`,
-      };
-      this.$axios
-        .post(`/sendWhatsapp`, this.whatsappPayload)
-        .then(({ data }) => {
-          this.errors = [];
-          alert("Form has been added");
-          console.log(data);
-          this.$router.push("/");
         })
         .catch(({ response }) => this.handleErrorResponse(response));
     },
