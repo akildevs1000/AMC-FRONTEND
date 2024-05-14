@@ -1,377 +1,451 @@
 <template>
-  <v-container>
-    <div class="text-center ma-5">
-      <v-snackbar v-model="snackbar" top="top" color="secondary" elevation="24">
-        {{ response }}
-      </v-snackbar>
-    </div>
-    <!-- <v-card outlined>
-      <pre>{{ checkListPayload }}</pre>
-    </v-card> -->
-    <v-row
-      v-for="(newHeading, newHeadingIndex) in newHeadings"
-      :key="newHeadingIndex"
-    >
+  <div
+    v-if="item && item.id"
+    class="report-print"
+    id="pdfContent"
+    ref="printableContent"
+  >
+    <v-row no-gutters class="mb-3">
+      <v-col cols="6">
+        <div style="width: 150px">
+          <v-img :src="`/mail-logo.png`"></v-img>
+        </div>
+      </v-col>
+      <v-col cols="6" class="text-right">
+        <h5 class="reds">AKIL SECURITY AND ALARM SYSTEMS</h5>
+        <div class="greens" style="line-height: 1">
+          <small>Khalid Bin Waleed Road, Dubai, UAE</small>
+        </div>
+        <div class="greens" style="line-height: 1">
+          <small> Tel : 04 3939 562, mail@akilgroup.com</small>
+        </div>
+      </v-col>
+    </v-row>
+
+    <v-row no-gutters>
       <v-col cols="12">
-        <v-toolbar class="primary" rounded dense dark>
-          {{ newHeadingIndex + 1 }}. {{ newHeading.heading }}
-        </v-toolbar>
-        <v-card
-          dense
-          class="my-2"
-          rounded
-          v-for="(question, questionIndex) in newHeading.questions"
-          :key="questionIndex"
-        >
-          <v-card-title>
-            <small class="mx-1"
-              >{{ newHeadingIndex + 1 }}.{{ questionIndex + 1 }}
-              {{ question.question }}</small
+        <div class="text-center">
+          <h5 class="uppercase-text py-1">
+            {{ item.equipment_category.name }} Preventive Maintenance Report
+          </h5>
+        </div>
+      </v-col>
+      <v-col cols="2" offset="5">
+        <div class="text-center tb-border">
+          {{ item.date }}
+        </div>
+      </v-col>
+    </v-row>
+
+    <v-row no-gutters class="mt-3">
+      <v-col cols="12" class="bottom-border">
+        <div class="my-blue darken-3 white--text">
+          <h5 class="pa-1">Company Details</h5>
+        </div>
+      </v-col>
+      <v-col cols="12">
+        <table>
+          <tr>
+            <td style="width: 150px">Company Name</td>
+            <td colspan="6">{{ item.amc.contract.company.name || "---" }}</td>
+          </tr>
+
+          <tr>
+            <td>Management Company</td>
+            <td colspan="4">King field management company</td>
+            <td>Email</td>
+            <td>manager@kingfield.com</td>
+          </tr>
+
+          <tr>
+            <td>Manager</td>
+            <td>{{ item.amc.contract.company.contact.name || "---" }}</td>
+            <td>Email</td>
+            <td colspan="2">
+              {{ item.amc.contract.company.contact.email || "---" }}
+            </td>
+            <td>Phone</td>
+            <td>{{ item.amc.contract.company.contact.number || "---" }}</td>
+          </tr>
+          <tr>
+            <td>Action Plan Issued By</td>
+            <td>Duabi Municipality</td>
+            <td colspan="2">Plot No</td>
+            <td>3920570</td>
+            <td>Land DM No</td>
+            <td>392-570</td>
+          </tr>
+          <tr>
+            <td>Address</td>
+            <td colspan="4">
+              {{ item.amc.contract.company.address || "---" }}
+            </td>
+            <td>Makani Number</td>
+            <td>{{ item.amc.contract.company.makani_number || "---" }}</td>
+          </tr>
+        </table>
+      </v-col>
+    </v-row>
+
+    <v-row no-gutters class="mt-3">
+      <v-col cols="12" class="bottom-border">
+        <div class="my-blue darken-3 white--text">
+          <h5 class="pa-1">AMC Details</h5>
+        </div>
+      </v-col>
+      <v-col cols="12">
+        <!-- License Issuer: {{ item.amc.contract.company.trade_license.issued_by || "---" }}
+            License Number: {{ item.amc.contract.company.trade_license.license_no || "---" }} -->
+        <table>
+          <tr>
+            <td style="width: 150px">AMC Start Date</td>
+            <td>{{ item.amc.contract.show_start_date || "---" }}</td>
+            <td colspan="2">AMC Expire Date</td>
+            <td>{{ item.amc.contract.show_expire_date || "---" }}</td>
+          </tr>
+
+          <tr>
+            <td>Equipment</td>
+            <td colspan="2">{{ item.equipment_category.name || "---" }}</td>
+            <td>LPO Number</td>
+            <td>LPO 1284</td>
+          </tr>
+        </table>
+      </v-col>
+    </v-row>
+
+    <v-row no-gutters class="mt-3">
+      <v-col cols="12" class="bottom-border">
+        <div class="my-blue darken-3 white--text">
+          <h5 class="pa-1">Equipement Details</h5>
+        </div>
+      </v-col>
+      <v-col cols="12" v-if="equipment">
+        <table>
+          <tr>
+            <td style="width: 150px">Recorder</td>
+            <td colspan="2">{{ equipment.recorder_brand }}</td>
+            <td>Total Qty</td>
+            <td>{{ equipment.recorder_qty }}</td>
+            <td>HDD</td>
+            <td>{{ equipment.recorder_capacity }}</td>
+          </tr>
+          <tr>
+            <td style="width: 150px">Work Station</td>
+            <td colspan="2">{{ equipment.work_station }}</td>
+            <td>Total Qty</td>
+            <td colspan="3">{{ equipment.work_station_qty }}</td>
+          </tr>
+          <tr>
+            <td style="width: 150px">Camera</td>
+            <td colspan="2">{{ equipment.camera }}</td>
+            <td>Total Qty</td>
+            <td colspan="3">{{ equipment.camera_qty }}</td>
+          </tr>
+          <tr>
+            <td style="width: 150px">Monitor</td>
+            <td colspan="2">{{ equipment.monitor }}</td>
+            <td>Total Qty</td>
+            <td colspan="3">{{ equipment.monitor_qty }}</td>
+          </tr>
+          <tr>
+            <td style="width: 150px">UPS</td>
+            <td>{{ equipment.ups }}</td>
+            <td>{{ equipment.ups_specs }}</td>
+            <td>Total Qty</td>
+            <td colspan="3">{{ equipment.ups_qty }}</td>
+          </tr>
+          <tr>
+            <td style="width: 150px">Network Switch</td>
+            <td>{{ equipment.network }}</td>
+            <td>{{ equipment.network_specs }}</td>
+            <td>Total Qty</td>
+            <td colspan="3">{{ equipment.network_qty }}</td>
+          </tr>
+        </table>
+      </v-col>
+    </v-row>
+
+    <v-row no-gutters class="mt-3">
+      <v-col cols="2" offset="5">
+        <div class="text-center tb-border">
+          <b> CHECKLIST</b>
+        </div>
+      </v-col>
+    </v-row>
+
+    <v-row
+      no-gutters
+      class="mt-3"
+      v-for="(checklist, index) in item.checklist.checklist"
+      :key="index"
+    >
+      <v-col cols="12" class="bottom-border">
+        <div class="my-blue darken-3 white--text">
+          <h5 class="pa-1">{{ index + 1 }}. {{ checklist.heading }}</h5>
+        </div>
+      </v-col>
+      <v-col cols="12">
+        <table>
+          <tr
+            v-for="(question, questionIndex) in checklist.questions"
+            :key="questionIndex"
+          >
+            <td style="width: 50px">{{ index + 1 }}.{{ questionIndex + 1 }}</td>
+            <td
+              :class="`${
+                (questionIndex + 1) % 14 === 0 ? 'page-break mt-15' : ''
+              }`"
             >
-          </v-card-title>
+              {{ question.question || "---" }} <br />
+              <div :class="`${getCellStyle(question.selectedOption)}--text`">
+                {{ question.remarks }}
+              </div>
+            </td>
+            <td style="width: 100px">{{ question.attachment_name }}</td>
+            <td
+              style="width: 200px; border-bottom: 1px white solid !important"
+              class="white--text text-center"
+              :class="getCellStyle(question.selectedOption)"
+            >
+              {{ question.selectedOption || "---" }}
+            </td>
+          </tr>
+        </table>
+      </v-col>
+    </v-row>
 
-          <v-card-text>
-            <v-row>
-              <v-col
-                cols="4"
-                class="text-center"
-                v-for="(option, optionIndex) in question.options"
-                :key="optionIndex"
-              >
-                <v-card
-                  style="border: 1px #cfc9c9 solid; border-radius: 10px"
-                  elevation="0"
-                  :class="getCellStyle(question.selectedOption, option)"
-                >
-                  <v-card-text
-                    class="pa-2"
-                    :class="
-                      question.selectedOption == option ? 'white--text' : ''
-                    "
-                  >
-                    {{ option }}
-                  </v-card-text>
-                </v-card>
-              </v-col>
+    <v-row>
+      <v-col cols="12" class="bottom-border">
+        <div class="my-blue darken-3 white--text">
+          <h5 class="pa-1">Technician Summary</h5>
+        </div>
+      </v-col>
 
-              <v-col cols="12" class="text-right">
-                <span
-                  class="primary--text"
-                  v-if="question && question.attachment_name"
-                >
-                  <ViewFile
-                    icon="mdi-paperclip"
-                    :label="question.attachment_name"
-                    :src="`http://192.168.2.24:8001/checklist/${form_entry_id}/${question.attachment_name}`"
-                  />
-                </span>
-                <span class="grey--text">
-                  <v-icon class="ml-5" color="grey"
-                    >mdi-clipboard-outline</v-icon
-                  >
-                  Add Note
-                </span>
+      <v-col cols="12">
+        <table class="mt-5">
+          <tr class="bottom-border">
+            <td class="pa-1" style="border: none">
+              <div>
+                {{ item.summary }}
+              </div>
+            </td>
+          </tr>
+        </table>
+      </v-col>
+    </v-row>
 
-                <v-textarea
-                  class="mt-3"
-                  outlined
-                  readonly
-                  v-model="question.remarks"
-                  dense
-                  :hide-details="true"
-                  v-if="question.isRemarks"
-                  label="Note"
-                  rows="1"
-                  auto-grow
-                ></v-textarea>
-              </v-col>
-            </v-row>
-          </v-card-text>
+    <v-row>
+      <v-col cols="12" class="bottom-border">
+        <div class="my-blue darken-3 white--text">
+          <h5 class="pa-1">Customer Comments</h5>
+        </div>
+      </v-col>
+
+      <v-col cols="12">
+        <table class="mt-5">
+          <tr class="bottom-border">
+            <td class="pa-1" style="border: none">
+              <div>
+                {{ item.customer_note }}
+              </div>
+            </td>
+          </tr>
+        </table>
+      </v-col>
+    </v-row>
+
+    <v-row class="page-break">
+      <v-col cols="12" class="bottom-border">
+        <div class="my-blue darken-3 white--text">
+          <h5 class="pa-1">Technician Signature</h5>
+        </div>
+      </v-col>
+
+      <v-col cols="6">
+        <table class="mt-5">
+          <tr class="bottom-border">
+            <td class="pa-1" style="border: none">
+              <b>Name</b>
+              <div>
+                {{ item.technician.name }}
+              </div>
+            </td>
+          </tr>
+          <tr class="bottom-border">
+            <td class="pa-1" style="border: none">
+              <b>Phone</b>
+              <div>
+                {{ item.technician.phone_number }}
+              </div>
+            </td>
+          </tr>
+          <tr class="bottom-border">
+            <td class="pa-1" style="border: none">
+              <b>Email</b>
+              <div>
+                {{ item.technician.email }}
+              </div>
+            </td>
+          </tr>
+          <tr class="bottom-border">
+            <td class="pa-1" style="border: none">
+              <b>Date Time</b>
+              <div>
+                {{ item.technician_signed_datetime }}
+              </div>
+            </td>
+          </tr>
+        </table>
+      </v-col>
+      <v-col cols="6" class="d-flex justify-center">
+        <v-card
+          elevation="0"
+          class="mt-2"
+          style="width: 175px"
+          v-if="item.sign"
+        >
+          <v-img :src="item.sign"></v-img>
         </v-card>
       </v-col>
     </v-row>
 
     <v-row>
-      <v-col cols="12">
-        <v-toolbar class="red" rounded dense dark> Defective Area </v-toolbar>
-        <v-card dense class="my-2" rounded>
-          <v-card-text>
-            <v-row>
-              <v-col cols="12" class="text-right">
-                <v-textarea
-                  outlined
-                  readonly
-                  v-model="payload.defective_area"
-                  dense
-                  :hide-details="true"
-                  label="Remarks"
-                  rows="3"
-                ></v-textarea>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col cols="12">
-        <v-toolbar class="blue" rounded dense dark> Report Summary </v-toolbar>
-        <v-card dense class="my-2" rounded>
-          <v-card-text>
-            <v-row>
-              <v-col cols="12" class="text-right">
-                <v-textarea
-                  outlined
-                  readonly
-                  v-model="payload.summary"
-                  dense
-                  :hide-details="true"
-                  label="Summary"
-                  rows="3"
-                ></v-textarea>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-        <v-divider></v-divider>
+      <v-col cols="12" class="bottom-border">
+        <div class="my-blue darken-3 white--text">
+          <h5 class="pa-1">Customer Signature</h5>
+        </div>
       </v-col>
 
-      <v-col cols="12">
-        <v-toolbar class="blue" rounded dense dark>
-          Customer Comments
-        </v-toolbar>
-        <v-card dense class="my-2" rounded>
-          <v-card-text>
-            <v-row>
-              <v-col cols="12" class="text-right">
-                <v-textarea
-                  outlined
-                  v-model="payload.customer_note"
-                  dense
-                  :hide-details="true"
-                  label="Customer Note"
-                  rows="3"
-                ></v-textarea>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-        <v-divider></v-divider>
+      <v-col cols="6">
+        <table class="mt-5">
+          <tr class="bottom-border">
+            <td class="pa-1" style="border: none">
+              <b>Name</b>
+              <div>
+                {{ item.customer_name }}
+              </div>
+            </td>
+          </tr>
+          <tr class="bottom-border">
+            <td class="pa-1" style="border: none">
+              <b>Phone</b>
+              <div>
+                {{ item.customer_phone }}
+              </div>
+            </td>
+          </tr>
+          <tr class="bottom-border">
+            <td class="pa-1" style="border: none">
+              <b>Date Time</b>
+              <div>
+                {{ item.customer_signed_datetime }}
+              </div>
+            </td>
+          </tr>
+        </table>
       </v-col>
-
-      <v-col cols="12">
-        <v-card dense class="my-2" rounded>
-          <v-card-text>
-            <v-container>
-              <v-row>
-                <v-col cols="12">
-                  <div>Customer action required</div>
-                </v-col>
-                <v-col cols="6">
-                  <v-text-field
-                    v-model="payload.customer_name"
-                    label="Name"
-                    dense
-                    :hide-details="true"
-                  ></v-text-field>
-                  <br />
-                  <v-text-field
-                    v-model="payload.customer_phone"
-                    label="Phone"
-                    dense
-                    :hide-details="true"
-                  ></v-text-field>
-                  <br />
-                  <v-text-field
-                    readonly
-                    v-model="payload.customer_signed_datetime"
-                    dense
-                    :hide-details="true"
-                    label="Date Time"
-                  ></v-text-field>
-                </v-col>
-
-                <v-col cols="6" class="d-flex justify-center">
-                  <v-card
-                    elevation="0"
-                    class="mt-2"
-                    style="width: 175px"
-                    v-if="payload.customer_sign"
-                  >
-                    <v-img :src="payload.customer_sign"></v-img>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-card-text>
-          <v-card-text>
-            <SignaturePad
-              label="Signature"
-              @sign="
-                (e) => {
-                  payload.customer_sign = e;
-                }
-              "
-            />
-          </v-card-text>
+      <v-col cols="6" class="d-flex justify-center">
+        <v-card
+          elevation="0"
+          class="mt-2"
+          style="width: 175px"
+          v-if="item.customer_sign"
+        >
+          <v-img :src="item.customer_sign"></v-img>
         </v-card>
-      </v-col>
-
-      <v-col cols="12" class="text-center">
-        <v-card-text>
-          <v-btn
-            :loading="loading"
-            v-if="payload && payload.customer_sign"
-            class="green"
-            block
-            dense
-            dark
-            @click="submit"
-          >
-            Submit
-          </v-btn>
-        </v-card-text>
       </v-col>
     </v-row>
-  </v-container>
+
+    <v-row class="footer-print top-border">
+      <v-col cols="4" class="footer-font-size"
+        ><small
+          >{{ item.equipment_category.name }} Preventive Maintenance
+          Report</small
+        ></v-col
+      >
+      <v-col cols="4" class="footer-font-size text-center">
+        <small> {{ item.date }}</small>
+      </v-col>
+      <v-col cols="4" class="footer-font-size text-right">
+        <small>Page 1/1</small>
+      </v-col>
+    </v-row>
+
+    <!-- <v-row class="page-break">
+      <v-col cols="12" class="bottom-border">
+        <div class="my-blue darken-3 white--text">
+          <h5 class="pa-1">Attachments</h5>
+        </div>
+      </v-col>
+      <v-col
+        cols="6"
+        v-for="(photo, index) in attachments"
+        :key="index"
+        class="pa-2"
+      >
+        <h4>
+          {{ photo || "---" }}
+        </h4>
+        <v-img
+          :src="`http://192.168.2.24:8001/checklist/${item.id}/${photo}`"
+        ></v-img>
+      </v-col>
+    </v-row> -->
+  </div>
 </template>
 <script>
 export default {
-  props: ["id"],
-  data: () => ({
-    loading: false,
-    currentDateTime: new Date(), // Initialize with current date and time
-    attachments: [],
-    newHeadings: [],
-    snack: false,
-    checkListPayload: {},
-    payload: {
-      work_id: 0,
-      equipment_category_id: 0,
-      sign: null,
-      defective_area: "",
-      summary: "",
-      customer_sign: null,
-    },
-    Model: "Equipment",
-    options: {},
-    endpoint: "equipmentCategoryWithQuestionsList",
-    snackbar: false,
-    dialog: false,
-    data: [],
-    equipmentCategory: 0,
-
-    loading: false,
-    total: 0,
-    selectedOption: null,
-    selectedOptionIndex: null,
-    radioOptions: ["Yes", "No", "N/A"], // Replace this with your options
-    response: "",
-    errors: [],
-    item: {},
-    form_entry_id: 0,
-  }),
-
-  created() {
-    this.form_entry_id = this.$route.params.id;
-    this.$axios.get(`/form_entry/${this.$route.params.id}`).then(({ data }) => {
-      this.payload = data;
-      this.newHeadings = data.checklist.checklist;
-    });
-
-    this.formattedDateTime();
+  layout: "print",
+  auth: false,
+  data() {
+    return {
+      dialog: false,
+      loading: true,
+      checkboxModel: "",
+      attachments: [],
+      item: null,
+      totalPages: 0,
+      equipment: {},
+    };
   },
+  mounted() {
+    setTimeout(() => {
+      this.printContent();
+    }, 5000);
+  },
+  async created() {
+    await this.$axios
+      .get(`/form_entry/${this.$route.params.id}`)
+      // .get(`https://amcbackend.mytime2cloud.com/api/form_entry/1`)
+      .then(({ data }) => {
+        this.item = data;
+        this.attachments = data.checklist.checklist
+          .flatMap((e) => e.questions.map((q) => q.attachment_name))
+          .filter((e) => e !== null)
+          .filter((e) => e !== undefined);
 
+        this.equipment = data?.equipment_category?.equipment;
+      });
+  },
+  watch: {},
   methods: {
-    getCellStyle(selectedOption, option) {
-      if (selectedOption == option) {
-        if (["Excellent", "Good", "Yes"].includes(selectedOption)) {
-          return "green lighten-2";
-        } else if (["N/A"].includes(selectedOption)) {
-          return "grey lighten-2";
-        } else {
-          return "red lighten-2";
-        }
+    getCellStyle(selectedOption) {
+      if (["Excellent", "Good", "Yes"].includes(selectedOption)) {
+        return "my-green";
+      } else if (["N/A"].includes(selectedOption)) {
+        return "grey lighten-2";
       } else {
-        return "";
+        return "my-red";
       }
     },
-    formattedDateTime() {
-      const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-      const months = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
-      const dayOfWeek = days[this.currentDateTime.getDay()];
-      const dayOfMonth = this.addOrdinalSuffix(this.currentDateTime.getDate());
-      const month = months[this.currentDateTime.getMonth()];
-      const year = this.currentDateTime.getFullYear();
-      const hours = this.padZero(this.currentDateTime.getHours());
-      const minutes = this.padZero(this.currentDateTime.getMinutes());
 
-      this.payload.customer_signed_datetime = `${dayOfWeek} ${dayOfMonth} ${month} ${year} ${hours}:${minutes}`;
-    },
-    addOrdinalSuffix(number) {
-      const suffixes = ["th", "st", "nd", "rd"];
-      const v = number % 100;
-      return number + (suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]);
-    },
-    padZero(number) {
-      return number.toString().padStart(2, "0");
-    },
-    submit() {
-      this.loading = true;
-      let payload = {
-        customer_name: this.payload.customer_name,
-        customer_phone: this.payload.customer_phone,
-        customer_sign: this.payload.customer_sign,
-        customer_note: this.payload.customer_note,
-        customer_signed_datetime: this.payload.customer_signed_datetime,
-      };
-      this.loading = true;
-      this.$axios
-        .post(`/form_entry/customer_update/${this.form_entry_id}`, payload)
-        .then(({ data }) => {
-          this.loading = false;
-          if (!data.status) {
-            this.errors = data.errors;
-          } else {
-            alert("Checklist has been authorized");
-            window.history.back();
-          }
-        })
-        .catch(({ response }) => this.handleErrorResponse(response));
-    },
-    updateServiceCallStatus() {
-      this.$axios
-        .put(`/service_call/${this.form_entry_id}`, { status: "Completed" })
-        .then(({ data }) => {
-          this.errors = [];
-          // this.sendWhatsapp();
-        })
-        .catch(({ response }) => this.handleErrorResponse(response));
-    },
-    handleErrorResponse(response) {
-      console.log(response);
-      this.loading = false;
-      if (!response) {
-        return;
-      }
-      let { status, data } = response;
-
-      if (status && status == 422) {
-        this.errors = data.errors;
-        return;
-      }
+    printContent() {
+      window.print();
     },
   },
 };
 </script>
+<style scoped>
+@import url("@/assets/amc-report.css");
+</style>

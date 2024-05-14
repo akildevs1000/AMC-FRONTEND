@@ -5,9 +5,6 @@
         {{ response }}
       </v-snackbar>
     </div>
-    <pre>
-      {{ payload }}
-    </pre>
     <v-row
       v-for="(newHeading, newHeadingIndex) in newHeadings"
       :key="newHeadingIndex"

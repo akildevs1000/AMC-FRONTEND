@@ -421,42 +421,9 @@ export default {
           } else {
             // this.updateServiceCallStatus();
             alert("Form has been added");
-            window.history.back();
+            // window.history.back();
+            this.$router.push("/checklist");
           }
-        })
-        .catch(({ response }) => this.handleErrorResponse(response));
-    },
-
-    sendWhatsapp() {
-      this.whatsappPayload = {
-        number: this.item.contract.company.contact_number,
-        message: `🔧 *Service Update* 🔧
-
-Hello *${this.item.contract.company.name}*,
-
-This is confirmation message from Akil Security regarding the update of the Service.
-
-Reference Number # *${this.item.id}*,
-
-🔍 *Summary	:*
-${this.payload.summary}
-
-📞 *Contact:*
-If you have any questions or concerns, feel free to reach out to me at +971 52 904 8025 or reply to this message.
-
-Thank you for your patience!
-
-Best regards,
-Akil Security
-`,
-      };
-      this.$axios
-        .post(`/sendWhatsapp`, this.whatsappPayload)
-        .then(({ data }) => {
-          this.errors = [];
-          alert("Form has been added");
-          console.log(data);
-          this.$router.push("/");
         })
         .catch(({ response }) => this.handleErrorResponse(response));
     },

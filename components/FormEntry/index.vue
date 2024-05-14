@@ -134,7 +134,7 @@
                 </v-list-item>
 
                 <v-list-item>
-                  <v-list-item-title>
+                  <v-list-item-title @click="moveTo(`/amc/print/${item.id}`)">
                     <v-icon small color="black">mdi-download</v-icon> Download
                   </v-list-item-title>
                 </v-list-item>
