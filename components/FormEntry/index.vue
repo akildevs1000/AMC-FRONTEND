@@ -144,7 +144,7 @@
                     <Delete
                       :id="item.id"
                       :endpoint="endpoint"
-                      @success="() => getDataFromApi"
+                      @success="() => getDataFromApi()"
                     />
                   </v-list-item-title>
                 </v-list-item>
