@@ -48,13 +48,16 @@
             <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
         </template>
-        <v-list width="150" dense>
-          <v-list-item @click="navigate(`/tickets/${item.id}`)">
-            <v-list-item-title> Ticket </v-list-item-title>
+        <v-list dense>
+          <v-list-item
+            v-for="(listItem, index) in equipmentCategoryList"
+            :key="index"
+            @click="navigate(listItem, item.id)"
+          >
+            <v-list-item-title>
+              {{ listItem.name }}
+            </v-list-item-title>
           </v-list-item>
-          <!-- <v-list-item @click="navigate(`/amc/${item.id}`)">
-                    <v-list-item-title> Ticket </v-list-item-title>
-                  </v-list-item> -->
         </v-list>
       </v-menu>
     </template>
@@ -101,12 +104,16 @@ export default {
     data: [],
     errors: [],
     headers: require("../../headers/ticket.json"),
+    equipmentCategoryList: [],
   }),
 
   async created() {
     this.loading = false;
 
     this.getDataFromApi();
+    this.$axios
+      .get(`equipmentCategoryList`)
+      .then(({ data }) => (this.equipmentCategoryList = data));
     //this.getDepartments(options);
   },
   mounted() {},
@@ -119,9 +126,16 @@ export default {
     },
   },
   methods: {
-    navigate(route) {
-      // Perform navigation based on item.route (e.g., using Vue Router)
-      console.log("Navigate to:", route);
+    navigate(selectedEquipment, id) {
+      const route = {
+        path: `/tickets/new/${id}`,
+        query: {
+          id: selectedEquipment.id,
+          name: selectedEquipment.name,
+          slug: selectedEquipment.slug,
+        },
+      };
+
       this.$router.push(route);
     },
     getCapitalFirstLetters(name) {

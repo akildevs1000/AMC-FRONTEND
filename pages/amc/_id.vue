@@ -100,7 +100,8 @@
                   >
                   Add Note
                 </span>
-
+              </v-col>
+              <v-col cols="12">
                 <v-textarea
                   class="mt-3"
                   outlined
@@ -150,9 +151,7 @@
         </v-card>
       </v-col>
       <v-col cols="12">
-        <v-toolbar class="blue" rounded dense dark>
-          Report Summary
-        </v-toolbar>
+        <v-toolbar class="blue" rounded dense dark> Report Summary </v-toolbar>
         <v-card
           dense
           class="my-2"
