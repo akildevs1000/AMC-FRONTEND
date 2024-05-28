@@ -246,7 +246,13 @@
           </v-card-text>
         </v-card>
       </v-col>
+      <!-- <v-col v-if="exception">
+        <pre>
+          {{checkListPayload}}
+        </pre>
+      </v-col> -->
       <v-col v-if="payload && payload.sign" cols="12" class="text-center">
+       
         <v-btn
           :loading="loading"
           class="green"
@@ -265,6 +271,7 @@
 export default {
   props: ["id"],
   data: () => ({
+    exception:null,
     currentDateTime: new Date(), // Initialize with current date and time
     attachments: [],
     newHeadings: [],
@@ -303,6 +310,9 @@ export default {
     let example = this.$route.query.example || false;
     let isExample = example == "true" || example == "1" ? "-example" : "";
     this.newHeadings = require(`@/jsons/questions/${this.equipmentCategoryObj.slug}${isExample}.json`);
+
+    this.newHeadings = require(`@/jsons/questions/${this.equipmentCategoryObj.slug}${isExample}-example.json`);
+
   },
 
   created() {
@@ -427,6 +437,7 @@ export default {
         .catch(({ response }) => this.handleErrorResponse(response));
     },
     handleErrorResponse(response) {
+      this.exception = response;
       this.loading = false;
       if (!response) {
         return;

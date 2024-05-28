@@ -328,7 +328,7 @@ export default {
     otp: "",
     userId: "",
     credentials: {
-      email: "technician@gmail.com",
+      email: "amc@gmail.com",
       password: "password",
     },
   }),

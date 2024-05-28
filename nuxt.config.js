@@ -188,6 +188,7 @@ export default {
   },
 
   env: {
-    SECRET_PASS_PHRASE: process.env.SECRET_PASS_PHRASE,
+    BACKEND_ABSOLUTE_URL: process.env.BACKEND_ABSOLUTE_URL,
+
   },
 };

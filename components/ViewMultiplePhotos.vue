@@ -24,7 +24,7 @@
         </v-toolbar>
         <v-img
           class="my-1"
-          :src="`http://192.168.2.24:8001/checklist/${form_entry_id}/${photo}`"
+          :src="`${BACKEND_ABSOLUTE_URL}/checklist/${form_entry_id}/${photo}`"
         ></v-img>
       </v-container>
     </v-card>
@@ -48,6 +48,7 @@ export default {
     },
   },
   data: () => ({
+    BACKEND_ABSOLUTE_URL: process.env.BACKEND_ABSOLUTE_URL,
     dialog: false,
     items: [],
   }),

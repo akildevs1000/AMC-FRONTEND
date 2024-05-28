@@ -62,7 +62,7 @@
                   <ViewFile
                     icon="mdi-paperclip"
                     :label="question.attachment_name"
-                    :src="`http://192.168.2.24:8001/checklist/${form_entry_id}/${question.attachment_name}`"
+                    :src="`checklist/${form_entry_id}/${question.attachment_name}`"
                   />
                 </span>
                 <span class="grey--text">

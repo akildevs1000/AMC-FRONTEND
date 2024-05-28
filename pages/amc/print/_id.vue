@@ -372,7 +372,7 @@
       </v-col>
     </v-row>
 
-    <!-- <v-row class="page-break">
+    <v-row class="page-break">
       <v-col cols="12" class="bottom-border">
         <div class="my-blue darken-3 white--text">
           <h5 class="pa-1">Attachments</h5>
@@ -388,10 +388,10 @@
           {{ photo || "---" }}
         </h4>
         <v-img
-          :src="`http://192.168.2.24:8001/checklist/${item.id}/${photo}`"
+          :src="`${BACKEND_ABSOLUTE_URL}/checklist/${item.id}/${photo}`"
         ></v-img>
       </v-col>
-    </v-row> -->
+    </v-row>
   </div>
 </template>
 <script>
@@ -400,6 +400,7 @@ export default {
   auth: false,
   data() {
     return {
+      BACKEND_ABSOLUTE_URL: process.env.BACKEND_ABSOLUTE_URL,
       dialog: false,
       loading: true,
       checkboxModel: "",

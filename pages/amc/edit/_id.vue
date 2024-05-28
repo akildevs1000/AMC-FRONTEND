@@ -52,7 +52,7 @@
                 </v-card>
               </v-col>
               <v-col cols="12" class="text-right">
-                <!-- <span
+                <span
                   class="primary--text"
                   v-if="
                     question &&
@@ -63,9 +63,9 @@
                     :key="getRandomId()"
                     icon="mdi-paperclip"
                     :label="`${question.attachment_name}`"
-                    :src="`http://192.168.2.24:8001/checklist/${form_entry_id}/${question.attachment_name}`"
+                    :src="`${BACKEND_ABSOLUTE_URL}/checklist/${form_entry_id}/${question.attachment_name}`"
                   />
-                </span> -->
+                </span>
                 <span class="primary--text">
                   <UploadAttachment
                     :displayPreview="false"
@@ -296,6 +296,7 @@ export default {
     item: {},
     form_entry_id: 0,
     showJson: {},
+    BACKEND_ABSOLUTE_URL: process.env.BACKEND_ABSOLUTE_URL,
   }),
 
   created() {
@@ -321,7 +322,7 @@ export default {
     },
     setDefaultImage(question) {
       if (question && question.attachment_name) {
-        return `http://192.168.2.24:8001/checklist/${this.form_entry_id}/${question.attachment_name}`;
+        return `${BACKEND_ABSOLUTE_URL}/checklist/${this.form_entry_id}/${question.attachment_name}`;
       }
 
       return null;

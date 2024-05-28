@@ -2,21 +2,19 @@
   <v-dialog v-model="dialog" height="700" width="700">
     <template v-slot:activator="{ on, attrs }">
       <!-- <v-icon color="primary" v-bind="attrs" v-on="on">mdi-attachment</v-icon> -->
-      <v-icon color="primary" v-bind="attrs" v-on="on"
-        >{{ icon }}</v-icon
-      >
-      {{label}}
+      <v-icon color="primary" v-bind="attrs" v-on="on">{{ icon }}</v-icon>
+      {{ label }}
     </template>
 
-    <v-card >
-      <v-toolbar flat dense>{{ label }} <v-spacer></v-spacer> 
-          <v-icon @click="dialog = false" color="primary"
+    <v-card>
+      <v-toolbar flat dense
+        >{{ label }} <v-spacer></v-spacer>
+        <v-icon @click="dialog = false" color="primary"
           >mdi-close-circle-outline</v-icon
         >
-      
       </v-toolbar>
 
-      <v-img :src="src" :alt="altText"></v-img>
+      <v-img :src="`${BACKEND_ABSOLUTE_URL}/${src}`" :alt="altText"></v-img>
     </v-card>
   </v-dialog>
 </template>
@@ -45,6 +43,7 @@ export default {
     },
   },
   data: () => ({
+    BACKEND_ABSOLUTE_URL: process.env.BACKEND_ABSOLUTE_URL,
     dialog: false,
   }),
 };
