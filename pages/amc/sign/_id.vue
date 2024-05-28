@@ -298,7 +298,7 @@ export default {
     });
 
     this.$axios
-      .get(`/manager`, { company_id: 0 })
+      .get(`/manager?company_id=${this.$route.query.company_id}`)
       .then(({ data }) => {
         this.customers = data.data;
       })

@@ -77,10 +77,6 @@
             <ReadMore :text="item.summary" />
           </template>
 
-          <template v-slot:item.service_call="{ item }">
-            Reference Id: {{ item.service_call_id }}
-          </template>
-
           <template v-slot:item.photos="{ item }">
             <div v-if="item.checklist">
               <ViewMultiplePhotos
@@ -115,26 +111,26 @@
               </template>
               <v-list width="150" dense>
                 <v-list-item>
-                  <v-list-item-title @click="moveTo(`/amc/sign/${item.id}`)">
+                  <v-list-item-title @click="moveTo(`/amc/sign`, item)">
                     <v-icon small color="black">mdi-pen</v-icon> Manager Sign
                   </v-list-item-title>
                 </v-list-item>
 
                 <!-- v-if="item.customer_sign" -->
                 <v-list-item>
-                  <v-list-item-title @click="moveTo(`/amc/edit/${item.id}`)">
+                  <v-list-item-title @click="moveTo(`/amc/edit`, item)">
                     <v-icon small color="black">mdi-pencil</v-icon> Edit
                   </v-list-item-title>
                 </v-list-item>
 
                 <v-list-item>
-                  <v-list-item-title @click="moveTo(`/amc/view/${item.id}`)">
+                  <v-list-item-title @click="moveTo(`/amc/view`, item)">
                     <v-icon small color="black">mdi-eye</v-icon> View
                   </v-list-item-title>
                 </v-list-item>
 
                 <v-list-item>
-                  <v-list-item-title @click="moveTo(`/amc/print/${item.id}`)">
+                  <v-list-item-title @click="moveTo(`/amc/print`, item)">
                     <v-icon small color="black">mdi-download</v-icon> Download
                   </v-list-item-title>
                 </v-list-item>
@@ -274,8 +270,15 @@ export default {
     },
   },
   methods: {
-    moveTo(path) {
-      this.$router.push(path);
+    moveTo(path, item) {
+      const route = {
+        path: `${path}/${item.id}`,
+        query: {
+          company_id: item?.amc?.contract?.company_id || 0,
+        },
+      };
+
+      this.$router.push(route);
     },
     exportCSV() {
       if (this.totalRowsCount === 0) {
