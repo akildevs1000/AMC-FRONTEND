@@ -5,6 +5,7 @@
         {{ response }}
       </v-snackbar>
     </div>
+
     <v-row
       v-for="(newHeading, newHeadingIndex) in newHeadings"
       :key="newHeadingIndex"
@@ -70,13 +71,17 @@
                   Option must be selected
                 </span>
               </v-col>
-              <v-col cols="6" class="text-right">
+
+              <v-col cols="12" class="text-right">
                 <span class="primary--text">
-                  <UploadAttachment
+                  <UploadMultipleAttachments
+                    :name="`${newHeadingIndex + 1}.${questionIndex + 1}`"
                     label="Take Photo"
-                    :name="`pic-${newHeadingIndex + 1}.${
-                      questionIndex + 1
-                    }.png`"
+                    @files-selected="
+                      handleMultipleFileSelection($event, question)
+                    "
+                  />
+                  <!-- <UploadAttachment
                     @file-selected="
                       handleFileSelection(
                         $event,
@@ -84,7 +89,7 @@
                         question
                       )
                     "
-                  />
+                  /> -->
                 </span>
                 <span
                   @click="
@@ -252,7 +257,6 @@
         </pre>
       </v-col> -->
       <v-col v-if="payload && payload.sign" cols="12" class="text-center">
-       
         <v-btn
           :loading="loading"
           class="green"
@@ -271,7 +275,7 @@
 export default {
   props: ["id"],
   data: () => ({
-    exception:null,
+    exception: null,
     currentDateTime: new Date(), // Initialize with current date and time
     attachments: [],
     newHeadings: [],
@@ -311,8 +315,7 @@ export default {
     let isExample = example == "true" || example == "1" ? "-example" : "";
     this.newHeadings = require(`@/jsons/questions/${this.equipmentCategoryObj.slug}${isExample}.json`);
 
-    // this.newHeadings = require(`@/jsons/questions/${this.equipmentCategoryObj.slug}${isExample}-example.json`);
-
+    this.newHeadings = require(`@/jsons/questions/${this.equipmentCategoryObj.slug}${isExample}-example.json`);
   },
 
   created() {
@@ -367,6 +370,22 @@ export default {
       });
       question["attachment_name"] = name;
     },
+
+    handleMultipleFileSelection(e, question) {
+      e.forEach((v, i) => {
+        const attachmentExists = this.attachments.some(
+          (att) => att.name === v.name
+        );
+        if (!attachmentExists) {
+          this.attachments.push({
+            name: v.name,
+            attachment: v.preview,
+          });
+          question["attachment_name"] = null;
+        }
+      });
+    },
+
     getCellStyle(selectedOption, option) {
       if (selectedOption == option) {
         if (["Excellent", "Good", "Yes"].includes(selectedOption)) {

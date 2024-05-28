@@ -12,6 +12,26 @@
     class="elevation-1 pa-3"
     :server-items-length="totalRowsCount"
   >
+    <template v-slot:top>
+      <v-toolbar flat dense class="mb-5">
+        <v-spacer></v-spacer>
+        <v-row>
+          <v-col cols="8"></v-col>
+          <v-col cols="4" class="text-right">
+           <v-container>
+            <CompanyList
+              @id="
+                (e) => {
+                  filters.company_id = e;
+                  getDataFromApi();
+                }
+              "
+            />
+           </v-container>
+          </v-col>
+        </v-row>
+      </v-toolbar>
+    </template>
     <template v-slot:item.company="{ item: { contract }, index }">
       <v-card
         elevation="0"
@@ -32,6 +52,11 @@
         item.priority.name ?? "---"
       }}</v-chip>
     </template>
+    <!-- <template v-slot:item.contract="{ item }">
+      <pre>
+        {{ item.contract.company }}
+      </pre>
+    </template> -->
     <template v-slot:item.schedule_date="{ item }">
       {{ item.pivot.schedule_date }}
     </template>
@@ -185,7 +210,9 @@ export default {
         key: "service_calls",
         options: this.options,
         refresh: true,
-        endpoint: `get_service_calls_by_technician_id/${this.$auth.user.id}`,
+        endpoint: `/get_service_calls_by_technician_id/${this.$auth.user.id}`,
+        // endpoint: `https://amcbackend.mytime2cloud.com/api/api/get_service_calls_by_technician_id/${this.$auth.user.id}`,
+
         filters: this.filters,
       });
 
