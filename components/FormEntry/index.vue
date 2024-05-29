@@ -77,12 +77,12 @@
             <ReadMore :text="item.summary" />
           </template>
 
-          <template v-slot:item.photos="{ item }">
+          <template v-slot:item.attachments="{ item }">
             <div v-if="item.checklist">
               <ViewMultiplePhotos
                 label="Photos"
                 :form_entry_id="item.id"
-                :photos="item.checklist.checklist"
+                :photos="item.attachments"
               />
             </div>
           </template>
@@ -235,11 +235,11 @@ export default {
         filterSpecial: false,
       },
       {
-        text: "View Photos",
+        text: "Attachments",
         align: "left",
         sortable: true,
-        key: "photos",
-        value: "photos",
+        key: "attachments",
+        value: "attachments",
         filterable: true,
         filterSpecial: false,
       },

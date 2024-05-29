@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" height="700" width="700">
+  <v-dialog v-model="dialog" height="700" width="900">
     <template v-slot:activator="{ on, attrs }">
       <!-- <v-icon color="primary" v-bind="attrs" v-on="on">mdi-attachment</v-icon> -->
       <v-icon v-if="items.length" color="primary" v-bind="attrs" v-on="on"
@@ -18,14 +18,19 @@
           >mdi-close-circle-outline</v-icon
         >
       </v-card-title>
-      <v-container v-for="(photo, index) in items" :key="index">
-        <v-toolbar dense flat rounded class="primary" dark>
-          <h4>{{ photo || "---" }}</h4>
-        </v-toolbar>
-        <v-img
-          class="my-1"
-          :src="`${BACKEND_ABSOLUTE_URL}/checklist/${form_entry_id}/${photo}`"
-        ></v-img>
+      <v-container fluid>
+        <v-row>
+          <v-col v-for="(photo, index) in items" :key="index">
+          <v-card elevation="5">
+            <div class="primary white--text pa-2">
+              {{ photo.attachment || "---" }}
+            </div>
+            <v-img
+              :src="`${BACKEND_ABSOLUTE_URL}/checklist/${form_entry_id}/${photo.attachment}`"
+            ></v-img>
+          </v-card>
+          </v-col>
+        </v-row>
       </v-container>
     </v-card>
   </v-dialog>
@@ -53,10 +58,7 @@ export default {
     items: [],
   }),
   created() {
-    this.items = this.photos
-      .flatMap((e) => e.questions.map((q) => q.attachment_name))
-      .filter((e) => e !== null)
-      .filter((e) => e !== undefined);
+    this.items = this.photos;
   },
 };
 </script>
