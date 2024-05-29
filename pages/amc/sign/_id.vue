@@ -57,7 +57,7 @@
               </v-col>
 
               <v-col cols="12" class="text-right">
-                <span v-if="payload" class="primary--text">
+                <!-- <span v-if="payload" class="primary--text">
                   <ViewMultiplePhotos
                     label="Photos"
                     :form_entry_id="payload.id"
@@ -66,6 +66,20 @@
                         `${newHeadingIndex + 1}.${questionIndex + 1}`
                       )
                     "
+                  />
+                </span> -->
+                <span
+                  v-for="(singlePic, singlePicIndex) in getRelatedPics(
+                    `${newHeadingIndex + 1}.${questionIndex + 1}`
+                  )"
+                  :key="singlePicIndex"
+                  class="primary--text"
+                >
+                  <ViewFile
+                    :key="getRandomId()"
+                    icon="mdi-paperclip"
+                    :label="`${singlePic.attachment}`"
+                    :src="`checklist/${singlePic.form_entry_id}/${singlePic.attachment}`"
                   />
                 </span>
                 <span class="grey--text">
@@ -290,6 +304,7 @@ export default {
     errors: [],
     item: {},
     form_entry_id: 0,
+    newDialogKey: 1,
   }),
 
   created() {
@@ -309,6 +324,9 @@ export default {
   },
 
   methods: {
+    getRandomId() {
+      return ++this.newDialogKey;
+    },
     getRelatedPics(item) {
       return this.payload.attachments.filter((e) =>
         e.attachment.includes(`pic-${item}`)

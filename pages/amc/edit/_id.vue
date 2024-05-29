@@ -53,20 +53,20 @@
               </v-col>
               <v-col cols="12" class="text-right">
                 <span
+                  v-for="(singlePic, singlePicIndex) in getRelatedPics(
+                    `${newHeadingIndex + 1}.${questionIndex + 1}`
+                  )"
+                  :key="singlePicIndex"
                   class="primary--text"
-                  v-if="
-                    question &&
-                    question.attachment_name
-                  "
                 >
                   <ViewFile
                     :key="getRandomId()"
                     icon="mdi-paperclip"
-                    :label="`${question.attachment_name}`"
-                    :src="`${BACKEND_ABSOLUTE_URL}/checklist/${form_entry_id}/${question.attachment_name}`"
+                    :label="`${singlePic.attachment}`"
+                    :src="`checklist/${singlePic.form_entry_id}/${singlePic.attachment}`"
                   />
                 </span>
-                <span class="primary--text">
+                <!-- <span class="primary--text">
                   <UploadAttachment
                     :displayPreview="false"
                     label="Take Photo"
@@ -81,7 +81,7 @@
                       )
                     "
                   />
-                </span>
+                </span> -->
                 <span
                   @click="
                     () => {
@@ -177,7 +177,7 @@
 
       <v-col cols="12">
         <v-card dense class="my-2" rounded>
-          <v-card-tex>
+          <v-card-text>
             <v-container>
               <v-row>
                 <v-col cols="12">
@@ -232,7 +232,7 @@
                 </v-col>
               </v-row>
             </v-container>
-          </v-card-tex>
+          </v-card-text>
           <v-card-text>
             <SignaturePad
               label="Technician Signature"
@@ -293,6 +293,7 @@ export default {
     radioOptions: ["Yes", "No", "N/A"], // Replace this with your options
     response: "",
     errors: [],
+    attachments: [],
     item: {},
     form_entry_id: 0,
     showJson: {},
@@ -313,10 +314,16 @@ export default {
         sign: data.sign,
         technician_signed_datetime: this.formattedDateTime(),
       };
+      this.attachments = data.attachments;
       this.newHeadings = data.checklist.checklist;
     });
   },
   methods: {
+    getRelatedPics(item) {
+      return this.attachments.filter((e) =>
+        e.attachment.includes(`pic-${item}`)
+      );
+    },
     getRandomId() {
       return ++this.newDialogKey;
     },
