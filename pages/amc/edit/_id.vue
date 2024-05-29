@@ -5,6 +5,33 @@
         {{ response }}
       </v-snackbar>
     </div>
+    <div class="text-center">
+      <v-dialog
+        class="remove-transparent-bg"
+        style="box-shadow: none !important"
+        v-model="responseDialog"
+        width="500"
+      >
+        <v-card style="background: none">
+          <v-toolbar style="background: none" flat dense>
+            <v-spacer></v-spacer>
+            <!-- <v-icon @click="dialog = false">mdi-close</v-icon> -->
+          </v-toolbar>
+
+          <v-card-text>
+            <p class="text-center">
+              <v-img
+                :src="response_image"
+                alt="Avatar"
+                height="125px"
+                width="125px"
+                style="display: inline-block"
+              ></v-img>
+            </p>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+    </div>
     <v-row
       v-for="(newHeading, newHeadingIndex) in newHeadings"
       :key="newHeadingIndex"
@@ -307,6 +334,8 @@ export default {
     form_entry_id: 0,
     showJson: {},
     BACKEND_ABSOLUTE_URL: process.env.BACKEND_ABSOLUTE_URL,
+    responseDialog: false,
+    response_image: "/success.png",
   }),
 
   created() {
@@ -425,7 +454,12 @@ export default {
           if (!data.status) {
             this.errors = data.errors;
           } else {
-            alert("Form has been updated");
+            this.response_image = "/success.png";
+            this.responseDialog = true;
+            setTimeout(() => {
+              this.responseDialog = false;
+              this.$router.push("/checklist");
+            }, 3000);
             // this.$router.push("/checklist");
           }
         })
@@ -433,6 +467,7 @@ export default {
     },
 
     handleErrorResponse(response) {
+      this.response_image = "/fail.png";
       this.loading = false;
       if (!response) {
         return;
@@ -443,7 +478,17 @@ export default {
         this.errors = data.errors;
         return;
       }
+
+      this.responseDialog = true;
+      setTimeout(() => {
+        this.responseDialog = false;
+      }, 3000);
     },
   },
 };
 </script>
+<style>
+.v-dialog.v-dialog--active {
+  box-shadow: none !important;
+}
+</style>
