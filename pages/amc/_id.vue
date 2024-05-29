@@ -77,19 +77,8 @@
                   <UploadMultipleAttachments
                     :name="`${newHeadingIndex + 1}.${questionIndex + 1}`"
                     label="Take Photo"
-                    @files-selected="
-                      handleMultipleFileSelection($event, question)
-                    "
+                    @files-selected="handleMultipleFileSelection($event)"
                   />
-                  <!-- <UploadAttachment
-                    @file-selected="
-                      handleFileSelection(
-                        $event,
-                        `pic-${newHeadingIndex + 1}.${questionIndex + 1}.png`,
-                        question
-                      )
-                    "
-                  /> -->
                 </span>
                 <span
                   @click="
@@ -371,7 +360,7 @@ export default {
       question["attachment_name"] = name;
     },
 
-    handleMultipleFileSelection(e, question) {
+    handleMultipleFileSelection(e) {
       e.forEach((v, i) => {
         const attachmentExists = this.attachments.some(
           (att) => att.name === v.name
@@ -381,7 +370,6 @@ export default {
             name: v.name,
             attachment: v.preview,
           });
-          question["attachment_name"] = null;
         }
       });
     },

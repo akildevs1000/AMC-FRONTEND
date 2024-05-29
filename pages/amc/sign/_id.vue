@@ -57,29 +57,15 @@
               </v-col>
 
               <v-col cols="12" class="text-right">
-                <!-- <span v-if="payload" class="primary--text">
-                  <ViewMultiplePhotos
+                <span v-if="payload && payload.id" class="primary--text">
+                  <ViewMultipleFiles
                     label="Photos"
                     :form_entry_id="payload.id"
-                    :photos="
+                    :attachments="
                       getRelatedPics(
                         `${newHeadingIndex + 1}.${questionIndex + 1}`
                       )
                     "
-                  />
-                </span> -->
-                <span
-                  v-for="(singlePic, singlePicIndex) in getRelatedPics(
-                    `${newHeadingIndex + 1}.${questionIndex + 1}`
-                  )"
-                  :key="singlePicIndex"
-                  class="primary--text"
-                >
-                  <ViewFile
-                    :key="getRandomId()"
-                    icon="mdi-paperclip"
-                    :label="`${singlePic.attachment}`"
-                    :src="`checklist/${singlePic.form_entry_id}/${singlePic.attachment}`"
                   />
                 </span>
                 <span class="grey--text">
@@ -305,6 +291,7 @@ export default {
     item: {},
     form_entry_id: 0,
     newDialogKey: 1,
+    myAttachments: [],
   }),
 
   created() {
@@ -313,6 +300,8 @@ export default {
       this.payload = data;
       this.newHeadings = data.checklist.checklist;
       this.payload.customer_signed_datetime = this.formattedDateTime();
+
+      this.myAttachments = this.payload.attachments;
     });
 
     this.$axios
@@ -328,7 +317,7 @@ export default {
       return ++this.newDialogKey;
     },
     getRelatedPics(item) {
-      return this.payload.attachments.filter((e) =>
+      return this.myAttachments.filter((e) =>
         e.attachment.includes(`pic-${item}`)
       );
     },

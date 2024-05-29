@@ -1,5 +1,12 @@
 <template>
   <span>
+    <span v-for="(file, index) in defaultItems" :key="index">
+      <PreviewUploadPic
+        :label="`${file.attachment}`"
+        icon="mdi-paperclip"
+        :src="`${BACKEND_ABSOLUTE_URL}/checklist/${file.form_entry_id}/${file.attachment}`"
+      />
+    </span>
     <input
       type="file"
       multiple
@@ -15,6 +22,9 @@
           icon="mdi-paperclip"
           :src="file.preview"
         />
+        <v-icon class="mr-2" color="primary" @click="deleteItem(index)"
+          >mdi-close</v-icon
+        >
       </span>
     </span>
     <v-icon class="ml-5" @click="triggerFileInput" :color="color"
@@ -35,9 +45,14 @@ export default {
       default: "primary",
       type: String,
     },
+
     name: {
       default: "pic-name",
       type: String,
+    },
+    defaultAttachments: {
+      default: [],
+      type: Array,
     },
   },
   data() {
@@ -46,14 +61,23 @@ export default {
       selectedFiles: [],
       currentComponent: null,
       newDialogKey: 1,
+      BACKEND_ABSOLUTE_URL: process.env.BACKEND_ABSOLUTE_URL,
+      defaultItems: [],
     };
   },
+  created() {
+    this.defaultItems = this.defaultAttachments;
+  },
   methods: {
+    deleteItem(index) {
+      this.selectedFiles.splice(index, 1);
+    },
     triggerFileInput() {
       this.$refs[`fileInput`].click();
     },
 
     handleFileInputChange(event) {
+      this.defaultItems = [];
       const files = event.target.files;
       if (files.length > 0) {
         this.isFileSelect = true;

@@ -21,14 +21,14 @@
       <v-container fluid>
         <v-row>
           <v-col v-for="(photo, index) in items" :key="index">
-          <v-card elevation="5">
-            <div class="primary white--text pa-2">
-              {{ photo.attachment || "---" }}
-            </div>
-            <v-img
-              :src="`${BACKEND_ABSOLUTE_URL}/checklist/${form_entry_id}/${photo.attachment}`"
-            ></v-img>
-          </v-card>
+            <v-card elevation="5">
+              <div class="primary white--text pa-2">
+                {{ photo.attachment || "---" }}
+              </div>
+              <v-img
+                :src="`${BACKEND_ABSOLUTE_URL}/checklist/${photo.form_entry_id}/${photo.attachment}`"
+              ></v-img>
+            </v-card>
           </v-col>
         </v-row>
       </v-container>

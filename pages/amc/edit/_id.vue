@@ -52,18 +52,27 @@
                 </v-card>
               </v-col>
               <v-col cols="12" class="text-right">
-                <span
-                  v-for="(singlePic, singlePicIndex) in getRelatedPics(
-                    `${newHeadingIndex + 1}.${questionIndex + 1}`
-                  )"
-                  :key="singlePicIndex"
-                  class="primary--text"
-                >
-                  <ViewFile
-                    :key="getRandomId()"
-                    icon="mdi-paperclip"
-                    :label="`${singlePic.attachment}`"
-                    :src="`checklist/${singlePic.form_entry_id}/${singlePic.attachment}`"
+                <!-- <span v-if="payload" class="primary--text">
+                  <ViewMultipleFiles
+                    label="Photos"
+                    :form_entry_id="payload.id"
+                    :attachments="
+                      getRelatedPics(
+                        `${newHeadingIndex + 1}.${questionIndex + 1}`
+                      )
+                    "
+                  />
+                </span> -->
+                <span class="primary--text">
+                  <UploadMultipleAttachments
+                    :name="`${newHeadingIndex + 1}.${questionIndex + 1}`"
+                    label="Take Photo"
+                    @files-selected="handleMultipleFileSelection($event)"
+                    :defaultAttachments="
+                      getRelatedPics(
+                        `${newHeadingIndex + 1}.${questionIndex + 1}`
+                      )
+                    "
                   />
                 </span>
                 <!-- <span class="primary--text">
@@ -323,6 +332,19 @@ export default {
       return this.attachments.filter((e) =>
         e.attachment.includes(`pic-${item}`)
       );
+    },
+    handleMultipleFileSelection(e) {
+      e.forEach((v, i) => {
+        const attachmentExists = this.attachments.some(
+          (att) => att.name === v.name
+        );
+        if (!attachmentExists) {
+          this.attachments.push({
+            name: v.name,
+            attachment: v.preview,
+          });
+        }
+      });
     },
     getRandomId() {
       return ++this.newDialogKey;

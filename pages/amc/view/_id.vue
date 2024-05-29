@@ -55,14 +55,15 @@
               </v-col>
 
               <v-col cols="12" class="text-right">
-                <span
-                  class="primary--text"
-                  v-if="question && question.attachment_name"
-                >
-                  <ViewFile
-                    icon="mdi-paperclip"
-                    :label="question.attachment_name"
-                    :src="`checklist/${form_entry_id}/${question.attachment_name}`"
+                <span v-if="payload && payload.id" class="primary--text">
+                  <ViewMultipleFiles
+                    label="Photos"
+                    :form_entry_id="payload.id"
+                    :attachments="
+                      getRelatedPics(
+                        `${newHeadingIndex + 1}.${questionIndex + 1}`
+                      )
+                    "
                   />
                 </span>
                 <span class="grey--text">
@@ -294,6 +295,7 @@ export default {
     radioOptions: ["Yes", "No", "N/A"], // Replace this with your options
     response: "",
     errors: [],
+    myAttachments:[],
     item: {},
     form_entry_id: 0,
   }),
@@ -302,11 +304,17 @@ export default {
     this.form_entry_id = this.$route.params.id;
     this.$axios.get(`/form_entry/${this.$route.params.id}`).then(({ data }) => {
       this.payload = data;
+      this.myAttachments = data.attachments
       this.newHeadings = data.checklist.checklist;
     });
   },
 
   methods: {
+    getRelatedPics(item) {
+      return this.myAttachments.filter((e) =>
+        e.attachment.includes(`pic-${item}`)
+      );
+    },
     getCellStyle(selectedOption, option) {
       if (selectedOption == option) {
         if (["Excellent", "Good", "Yes"].includes(selectedOption)) {
