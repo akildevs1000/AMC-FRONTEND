@@ -6,7 +6,9 @@
       </v-snackbar>
     </div>
     <!-- <v-card outlined>
-      <pre>{{ checkListPayload }}</pre>
+      <v-container>
+        <pre>{{ payload.attachments }}</pre>
+      </v-container>
     </v-card> -->
     <v-row
       v-for="(newHeading, newHeadingIndex) in newHeadings"
@@ -55,14 +57,15 @@
               </v-col>
 
               <v-col cols="12" class="text-right">
-                <span
-                  class="primary--text"
-                  v-if="question && question.attachment_name"
-                >
-                  <ViewFile
-                    icon="mdi-paperclip"
-                    :label="question.attachment_name"
-                    :src="`checklist/${form_entry_id}/${question.attachment_name}`"
+                <span v-if="payload" class="primary--text">
+                  <ViewMultiplePhotos
+                    label="Photos"
+                    :form_entry_id="payload.id"
+                    :photos="
+                      getRelatedPics(
+                        `${newHeadingIndex + 1}.${questionIndex + 1}`
+                      )
+                    "
                   />
                 </span>
                 <span class="grey--text">
@@ -306,6 +309,11 @@ export default {
   },
 
   methods: {
+    getRelatedPics(item) {
+      return this.payload.attachments.filter((e) =>
+        e.attachment.includes(`pic-${item}`)
+      );
+    },
     getRelatedCustomerInfo(id) {
       let found = this.customers.find((e) => e.id == id);
       this.payload.customer_name = found.name;
