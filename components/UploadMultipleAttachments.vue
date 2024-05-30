@@ -18,7 +18,7 @@
     <span v-if="isFileSelect">
       <span v-for="(file, index) in selectedFiles" :key="index">
         <PreviewUploadPic
-          :label="`pic-${name}.${index + 1}.png ${file.imageSize}`"
+          :label="`pic-${name}.${index + 1}`"
           icon="mdi-paperclip"
           :src="file.preview"
         />
@@ -82,7 +82,7 @@ export default {
       if (files.length > 0) {
         this.isFileSelect = true;
         for (let i = 0; i < files.length; i++) {
-          this.processFile(files[i], `pic-${this.name}.${i + 1}.png`);
+          this.processFile(files[i], `pic-${this.name}.${i + 1}`);
         }
       } else {
         this.isFileSelect = false;
@@ -115,12 +115,9 @@ export default {
                 const compressedDataUrl = compressedEvent.target.result;
 
                 // Update the preview and emit events
-                const fileSizeInKB = (compressedFile.size / 1024).toFixed(2);
-                const imageSize = `(${fileSizeInKB} KB)`;
                 this.selectedFiles.push({
                   name: picName,
                   preview: compressedDataUrl,
-                  imageSize,
                   key: this.newDialogKey++,
                 });
 

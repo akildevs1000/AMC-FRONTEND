@@ -425,7 +425,7 @@ export default {
     let isExample = example == "true" || example == "1" ? "-example" : "";
     this.newHeadings = require(`@/jsons/questions/${this.equipmentCategoryObj.slug}${isExample}.json`);
 
-    this.newHeadings = require(`@/jsons/questions/${this.equipmentCategoryObj.slug}${isExample}-example.json`);
+    // this.newHeadings = require(`@/jsons/questions/${this.equipmentCategoryObj.slug}${isExample}-example.json`);
   },
 
   created() {
