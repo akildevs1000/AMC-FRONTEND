@@ -590,8 +590,8 @@ export default {
   },
 };
 </script>
-<!-- <style>
+<style>
 .v-dialog.v-dialog--active {
   box-shadow: none !important;
 }
-</style> -->
+</style>

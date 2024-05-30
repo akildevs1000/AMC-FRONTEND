@@ -111,27 +111,27 @@
           </v-btn>
         </template>
         <v-list width="150" dense>
-          <v-list-item>
-            <v-list-item-title @click="moveTo(`/amc/sign`, item)">
+          <v-list-item @click="moveTo(`/amc/sign`, item)">
+            <v-list-item-title>
               <v-icon small color="black">mdi-pen</v-icon> Manager Sign
             </v-list-item-title>
           </v-list-item>
-
-          <!-- v-if="item.customer_sign" -->
-          <v-list-item>
-            <v-list-item-title @click="moveTo(`/amc/edit`, item)">
+          <v-list-item @click="moveTo(`/amc/edit`, item)">
+            <v-list-item-title>
               <v-icon small color="black">mdi-pencil</v-icon> Edit
             </v-list-item-title>
           </v-list-item>
 
-          <v-list-item>
-            <v-list-item-title @click="moveTo(`/amc/view`, item)">
+          <v-list-item @click="moveTo(`/amc/view`, item)">
+            <v-list-item-title>
               <v-icon small color="black">mdi-eye</v-icon> View
             </v-list-item-title>
           </v-list-item>
 
-          <v-list-item>
-            <v-list-item-title @click="moveTo(`/amc/print`, item)">
+          <v-list-item
+            @click="moveToExternalWindow(`form_entry/amc/print`, item.id)"
+          >
+            <v-list-item-title>
               <v-icon small color="black">mdi-download</v-icon> Download
             </v-list-item-title>
           </v-list-item>
@@ -277,6 +277,9 @@ export default {
       };
 
       this.$router.push(route);
+    },
+    moveToExternalWindow(path, id) {
+      window.open(`${process.env.BACKEND_URL}/${path}/${id}`, "_blank");
     },
     exportCSV() {
       if (this.totalRowsCount === 0) {
