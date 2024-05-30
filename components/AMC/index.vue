@@ -18,16 +18,16 @@
         <v-row>
           <v-col cols="8"></v-col>
           <v-col cols="4" class="text-right">
-           <v-container>
-            <CompanyList
-              @id="
-                (e) => {
-                  filters.company_id = e;
-                  getDataFromApi();
-                }
-              "
-            />
-           </v-container>
+            <v-container>
+              <CompanyList
+                @id="
+                  (e) => {
+                    filters.company_id = e;
+                    getDataFromApi();
+                  }
+                "
+              />
+            </v-container>
           </v-col>
         </v-row>
       </v-toolbar>
@@ -77,7 +77,7 @@
           <v-list-item
             v-for="(listItem, index) in equipmentCategoryList"
             :key="index"
-            @click="navigate(listItem, item.id)"
+            @click="navigate(listItem, item.id, item.contract.company)"
           >
             <v-list-item-title>
               {{ listItem.name }}
@@ -152,13 +152,21 @@ export default {
     },
   },
   methods: {
-    navigate(selectedEquipment, id) {
+    navigate(selectedEquipment, id, company) {
       const route = {
         path: `/amc/${id}`,
         query: {
           id: selectedEquipment.id,
           name: selectedEquipment.name,
           slug: selectedEquipment.slug,
+          company_name: company.name,
+          company_logo: company.logo,
+          company_email: company.email,
+          company_makani_number: company.makani_number,
+          company_address: company.address,
+          company_show_member_from: company.show_member_from,
+          company_show_expiry: company.show_expiry,
+          company_contact_number: company.contact_number,
         },
       };
 
