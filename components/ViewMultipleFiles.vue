@@ -8,13 +8,13 @@
       <v-icon color="primary" @click="openNewDialog(singlePic)"
         >mdi-paperclip</v-icon
       >
-      {{ singlePic.attachment }}
+      {{ singlePic.slug }}
     </span>
 
     <v-dialog v-model="dialog" height="700" width="700">
       <v-card>
         <v-toolbar flat dense
-          >{{ item.attachment }} <v-spacer></v-spacer>
+          >{{ item.slug }} <v-spacer></v-spacer>
           <v-icon @click="dialog = false" color="primary"
             >mdi-close-circle-outline</v-icon
           >

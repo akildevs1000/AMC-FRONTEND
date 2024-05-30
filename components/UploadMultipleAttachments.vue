@@ -51,7 +51,7 @@ export default {
       type: String,
     },
     defaultAttachments: {
-      default: [],
+      default: () => [],
       type: Array,
     },
   },
@@ -82,7 +82,12 @@ export default {
       if (files.length > 0) {
         this.isFileSelect = true;
         for (let i = 0; i < files.length; i++) {
-          this.processFile(files[i], `pic-${this.name}.${i + 1}`);
+          this.processFile(
+            files[i],
+            `pic-${this.name}.${
+              files.length > 1 ? i + 1 : this.selectedFiles.length + 1
+            }`
+          );
         }
       } else {
         this.isFileSelect = false;
@@ -115,9 +120,12 @@ export default {
                 const compressedDataUrl = compressedEvent.target.result;
 
                 // Update the preview and emit events
+                const fileSizeInKB = (compressedFile.size / 1024).toFixed(2);
+                const imageSize = `(${fileSizeInKB} KB)`;
                 this.selectedFiles.push({
                   name: picName,
                   preview: compressedDataUrl,
+                  imageSize,
                   key: this.newDialogKey++,
                 });
 
