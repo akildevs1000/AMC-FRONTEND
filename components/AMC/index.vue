@@ -75,7 +75,9 @@
         </template>
         <v-list dense>
           <v-list-item
-            v-for="(listItem, index) in equipmentCategoryList"
+            v-for="(listItem, index) in equipmentCategoryByCompanyId[
+              item.contract.company_id
+            ]"
             :key="index"
             @click="navigate(listItem, item.id, item.contract.company)"
           >
@@ -127,20 +129,19 @@ export default {
     loading: false,
     response: "",
     data: [],
-    equipmentCategoryList: [],
     errors: [],
     headers: require("../../headers/service_call.json"),
+    equipmentCategoryByCompanyId: {},
   }),
 
   async created() {
     this.loading = false;
 
-    this.$axios
-      .get(`equipmentCategoryList`)
-      .then(({ data }) => (this.equipmentCategoryList = data));
+    let { data } = await this.$axios.get(`equipmentCategoryByCompanyId`);
+
+    this.equipmentCategoryByCompanyId = data;
 
     this.getDataFromApi();
-    //this.getDepartments(options);
   },
   mounted() {},
   watch: {
