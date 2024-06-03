@@ -235,35 +235,6 @@
 
     <v-row>
       <v-col cols="12">
-        <v-toolbar class="red" rounded dense dark> Defective Area </v-toolbar>
-        <v-card
-          dense
-          class="my-2"
-          rounded
-          :style="`border:1px solid ${errors.defective_area ? 'red' : 'white'}`"
-        >
-          <v-container>
-            <v-row>
-              <v-col cols="12" class="text-right">
-                <v-textarea
-                  outlined
-                  v-model="payload.defective_area"
-                  dense
-                  :hide-details="true"
-                  label="Remarks"
-                  rows="3"
-                ></v-textarea>
-              </v-col>
-              <v-col v-if="errors.defective_area">
-                <span class="red--text">
-                  {{ errors.defective_area[0] }}
-                </span>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card>
-      </v-col>
-      <v-col cols="12">
         <v-toolbar class="blue" rounded dense dark> Report Summary </v-toolbar>
         <v-card
           dense
