@@ -15,63 +15,63 @@
     <template v-slot:top>
       <v-container>
         <v-row>
-        <v-col cols="2">
-          <v-toolbar flat dense>
-            <v-toolbar-title> CheckList </v-toolbar-title>
-          </v-toolbar>
-        </v-col>
-        <v-col cols="10" class="text-right">
-          <v-row>
-            <v-col cols="3">
-              <v-autocomplete
-                label="Select Job Type"
-                dense
-                outlined
-                v-model="filters.work_type"
-                :items="[
-                  { id: ``, name: `Select All` },
-                  { id: `amc`, name: `AMC` },
-                  { id: `ticket`, name: `Ticket` },
-                ]"
-                item-value="id"
-                item-text="name"
-                :hide-details="true"
-              ></v-autocomplete>
-            </v-col>
-            <v-col cols="3">
-              <v-autocomplete
-                label="Select Equipment Category"
-                dense
-                outlined
-                v-model="filters.equipment_category_id"
-                :items="[
-                  { id: ``, name: `Select All` },
-                  ...equipmentCategoryList,
-                ]"
-                item-value="id"
-                item-text="name"
-                :hide-details="true"
-              ></v-autocomplete>
-            </v-col>
-            <v-col cols="4">
-              <CustomDateFilter
-                @filter-attr="filterAttr"
-                :defaultFilterType="1"
-                height="40px"
-              />
-            </v-col>
-            <v-col cols="2">
-              <v-btn
-                color="primary"
-                label="Select Technician"
-                dense
-                @click="getDataFromApi"
-                >Submit</v-btn
-              >
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
+          <v-col cols="2">
+            <v-toolbar flat dense>
+              <v-toolbar-title> CheckList </v-toolbar-title>
+            </v-toolbar>
+          </v-col>
+          <v-col cols="10" class="text-right">
+            <v-row>
+              <v-col cols="3">
+                <v-autocomplete
+                  label="Select Job Type"
+                  dense
+                  outlined
+                  v-model="filters.work_type"
+                  :items="[
+                    { id: ``, name: `Select All` },
+                    { id: `amc`, name: `AMC` },
+                    { id: `ticket`, name: `Ticket` },
+                  ]"
+                  item-value="id"
+                  item-text="name"
+                  :hide-details="true"
+                ></v-autocomplete>
+              </v-col>
+              <v-col cols="3">
+                <v-autocomplete
+                  label="Select Equipment Category"
+                  dense
+                  outlined
+                  v-model="filters.equipment_category_id"
+                  :items="[
+                    { id: ``, name: `Select All` },
+                    ...equipmentCategoryList,
+                  ]"
+                  item-value="id"
+                  item-text="name"
+                  :hide-details="true"
+                ></v-autocomplete>
+              </v-col>
+              <v-col cols="4">
+                <CustomDateFilter
+                  @filter-attr="filterAttr"
+                  :defaultFilterType="1"
+                  height="40px"
+                />
+              </v-col>
+              <v-col cols="2">
+                <v-btn
+                  color="primary"
+                  label="Select Technician"
+                  dense
+                  @click="getDataFromApi"
+                  >Submit</v-btn
+                >
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
       </v-container>
     </template>
     <template v-slot:item.summary="{ item }">
@@ -129,7 +129,12 @@
           </v-list-item>
 
           <v-list-item
-            @click="moveToExternalWindow(`form_entry/amc/print`, item.id)"
+            @click="
+              moveToExternalWindow(
+                `form_entry/${item.work_type}/print`,
+                item.id
+              )
+            "
           >
             <v-list-item-title>
               <v-icon small color="black">mdi-download</v-icon> Download
@@ -173,8 +178,8 @@ export default {
         text: "Company",
         align: "left",
         sortable: true,
-        key: "amc.contract.company.name",
-        value: "amc.contract.company.name",
+        key: "company.name",
+        value: "company.name",
         filterable: true,
         filterSpecial: false,
       },
@@ -272,7 +277,7 @@ export default {
       const route = {
         path: `${path}/${item.id}`,
         query: {
-          company_id: item?.amc?.contract?.company_id || 0,
+          company_id: item?.company_id || 0,
         },
       };
 

@@ -168,6 +168,8 @@ export default {
           company_show_member_from: company.show_member_from,
           company_show_expiry: company.show_expiry,
           company_contact_number: company.contact_number,
+
+          company_id: company.id,
         },
       };
 

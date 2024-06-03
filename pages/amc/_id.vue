@@ -33,6 +33,7 @@
         </v-card>
       </v-dialog>
     </div>
+    
     <v-toolbar class="primary my-2" rounded dense dark>
       <b>Company Details</b>
     </v-toolbar>
@@ -425,7 +426,7 @@ export default {
     let isExample = example == "true" || example == "1" ? "-example" : "";
     this.newHeadings = require(`@/jsons/questions/${this.equipmentCategoryObj.slug}${isExample}.json`);
 
-    // this.newHeadings = require(`@/jsons/questions/${this.equipmentCategoryObj.slug}${isExample}-example.json`);
+    this.newHeadings = require(`@/jsons/questions/${this.equipmentCategoryObj.slug}${isExample}-example.json`);
   },
 
   created() {
@@ -434,6 +435,7 @@ export default {
     });
 
     this.payload.equipment_category_id = this.$route.query.id;
+    this.payload.company_id = this.$route.query.company_id;
     this.payload.work_id = this.$route.params.id;
     this.payload.technician_id = this.$auth.user.id;
 

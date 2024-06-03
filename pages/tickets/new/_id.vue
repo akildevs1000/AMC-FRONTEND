@@ -5,6 +5,95 @@
         {{ response }}
       </v-snackbar>
     </div>
+    <v-toolbar class="primary my-2" rounded dense dark>
+      <b>Company Details</b>
+    </v-toolbar>
+    <v-card v-if="equipmentCategoryObj" class="my-2">
+      <v-card-text>
+        <v-container>
+          <v-row>
+            <v-col cols="3">
+              <div class="text-center">
+                <v-avatar size="150">
+                  <v-img :src="equipmentCategoryObj.company_logo"> </v-img>
+                </v-avatar>
+              </div>
+            </v-col>
+            <v-col cols="9" dense>
+              <v-row>
+                <v-col cols="6" dense>
+                  <v-text-field
+                    label="Name"
+                    dense
+                    outlined
+                    type="text"
+                    v-model="equipmentCategoryObj.company_name"
+                    :hide-details="true"
+                    readonly
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="6" dense>
+                  <v-text-field
+                    label="Email"
+                    dense
+                    outlined
+                    type="text"
+                    v-model="equipmentCategoryObj.company_email"
+                    :hide-details="true"
+                    readonly
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="6" dense>
+                  <v-text-field
+                    label="Member From"
+                    dense
+                    outlined
+                    type="text"
+                    v-model="equipmentCategoryObj.company_show_member_from"
+                    :hide-details="true"
+                    readonly
+                  ></v-text-field>
+                </v-col>
+
+                <v-col cols="6" dense>
+                  <v-text-field
+                    label="Expiry"
+                    dense
+                    outlined
+                    type="text"
+                    v-model="equipmentCategoryObj.company_show_expiry"
+                    :hide-details="true"
+                    readonly
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="6" dense>
+                  <v-text-field
+                    label="Contact Number"
+                    dense
+                    outlined
+                    type="text"
+                    v-model="equipmentCategoryObj.company_contact_number"
+                    :hide-details="true"
+                    readonly
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="6" dense>
+                  <v-text-field
+                    label="Address"
+                    dense
+                    outlined
+                    type="text"
+                    v-model="equipmentCategoryObj.company_address"
+                    :hide-details="true"
+                    readonly
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-card-text>
+    </v-card>
 
     <v-row>
       <v-col cols="12">

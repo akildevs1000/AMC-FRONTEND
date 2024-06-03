@@ -15,7 +15,7 @@
         "remarks": null,
         "isRemarks": false,
         "attachment_name": null,
-        "question": "Any Spare parts has to be changed?",
+        "question": "Any  Observation  during  technician visit",
         "options": ["Yes", "No", "N/A"]
       },
       {
@@ -23,7 +23,7 @@
         "remarks": null,
         "isRemarks": false,
         "attachment_name": null,
-        "question": "Any Spare parts has to be changed?",
+        "question": "Analysis of the root cause of the problem?",
         "options": ["Yes", "No", "N/A"]
       },
       {
@@ -31,7 +31,7 @@
         "remarks": null,
         "isRemarks": false,
         "attachment_name": null,
-        "question": "Any Spare parts has to be changed?",
+        "question": "Any repairs ,  replacement or adjusted  during  this visit",
         "options": ["Yes", "No", "N/A"]
       },
       {
@@ -39,7 +39,7 @@
         "remarks": null,
         "isRemarks": false,
         "attachment_name": null,
-        "question": "Any Spare parts has to be changed?",
+        "question": "Confirmation   that the repprted  issue  has been resolved",
         "options": ["Yes", "No", "N/A"]
       }
     ]
