@@ -123,26 +123,6 @@
 
     <v-row>
       <v-col cols="12">
-        <v-toolbar class="red" rounded dense dark> Defective Area </v-toolbar>
-        <v-card dense class="my-2" rounded>
-          <v-card-text>
-            <v-row>
-              <v-col cols="12" class="text-right">
-                <v-textarea
-                  outlined
-                  readonly
-                  v-model="payload.defective_area"
-                  dense
-                  :hide-details="true"
-                  label="Remarks"
-                  rows="3"
-                ></v-textarea>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col cols="12">
         <v-toolbar class="blue" rounded dense dark> Report Summary </v-toolbar>
         <v-card dense class="my-2" rounded>
           <v-card-text>
@@ -295,7 +275,6 @@ export default {
       work_id: 0,
       equipment_category_id: 0,
       sign: null,
-      defective_area: "",
       summary: "",
       customer_sign: null,
     },

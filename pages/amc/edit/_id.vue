@@ -153,35 +153,6 @@
 
     <v-row>
       <v-col cols="12">
-        <v-toolbar class="red" rounded dense dark> Defective Area </v-toolbar>
-        <v-card
-          dense
-          class="my-2"
-          rounded
-          :style="`border:1px solid ${errors.defective_area ? 'red' : 'white'}`"
-        >
-          <v-card-text>
-            <v-row>
-              <v-col cols="12" class="text-right">
-                <v-textarea
-                  outlined
-                  v-model="payload.defective_area"
-                  dense
-                  :hide-details="true"
-                  label="Remarks"
-                  rows="3"
-                ></v-textarea>
-                <v-col v-if="errors.defective_area">
-                  <span class="red--text">
-                    {{ errors.defective_area[0] }}
-                  </span>
-                </v-col>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col cols="12">
         <v-toolbar class="blue" rounded dense dark> Report Summary </v-toolbar>
         <v-card
           dense
@@ -308,7 +279,6 @@ export default {
     snack: false,
     checkListPayload: {},
     payload: {
-      defective_area: null,
       summary: null,
       sign: null,
       technician_signed_datetime: null,
@@ -347,7 +317,6 @@ export default {
 
     this.$axios.get(`/form_entry/${this.$route.params.id}`).then(({ data }) => {
       this.payload = {
-        defective_area: data.defective_area,
         summary: data.summary,
         sign: data.sign,
         technician_signed_datetime: this.formattedDateTime(),
