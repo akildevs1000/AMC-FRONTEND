@@ -366,7 +366,6 @@ export default {
       equipment_category_id: 0,
       work_type: "amc",
       sign: null,
-      defective_area: null,
       summary: "",
     },
     Model: "Equipment",
