@@ -128,7 +128,7 @@ export default {
   methods: {
     navigate(selectedEquipment, id, company) {
       const route = {
-        path: `/tickets/${id}`,
+        path: `/ticket/${id}`,
         query: {
           id: selectedEquipment.id,
           name: selectedEquipment.name,

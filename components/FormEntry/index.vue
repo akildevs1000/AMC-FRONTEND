@@ -111,18 +111,19 @@
           </v-btn>
         </template>
         <v-list width="150" dense>
-          <v-list-item @click="moveTo(`/amc/sign`, item)">
+          <v-list-item @click="moveTo(`/${item.work_type}/sign`, item)">
             <v-list-item-title>
-              <v-icon small color="black">mdi-pen</v-icon> Manager Sign
+              <v-icon small color="black">mdi-pen</v-icon>
+              Manager Sign
             </v-list-item-title>
           </v-list-item>
-          <v-list-item @click="moveTo(`/amc/edit`, item)">
+          <v-list-item @click="moveTo(`/${item.work_type}/edit`, item)">
             <v-list-item-title>
               <v-icon small color="black">mdi-pencil</v-icon> Edit
             </v-list-item-title>
           </v-list-item>
 
-          <v-list-item @click="moveTo(`/amc/view`, item)">
+          <v-list-item @click="moveTo(`/${item.work_type}/view`, item)">
             <v-list-item-title>
               <v-icon small color="black">mdi-eye</v-icon> View
             </v-list-item-title>
@@ -274,12 +275,31 @@ export default {
   },
   methods: {
     moveTo(path, item) {
+      let company = item.company;
       const route = {
         path: `${path}/${item.id}`,
         query: {
-          company_id: item?.company_id || 0,
+          company_name: company.name,
+          company_logo: company.logo,
+          company_email: company.email,
+          company_makani_number: company.makani_number,
+          company_address: company.address,
+          company_show_member_from: company.show_member_from,
+          company_show_expiry: company.show_expiry,
+          company_contact_number: company.contact_number,
+          company_id: company.id,
         },
       };
+
+      if (item.ticket) {
+        route.query.work_id = item.ticket.id;
+        route.query.title = item.ticket.title;
+        route.query.description = item.ticket.description;
+        route.query.status = item.ticket.status;
+        route.query.ticket_open_date_time = item.ticket.ticket_open_date_time;
+        route.query.ticket_close_date_time = item.ticket.ticket_close_date_time;
+        route.query.attachment = item.ticket.attachment;
+      }
 
       this.$router.push(route);
     },
