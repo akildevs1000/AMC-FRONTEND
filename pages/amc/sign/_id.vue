@@ -176,7 +176,13 @@
                   <div>Customer action required</div>
                 </v-col>
                 <v-col cols="6">
-                  <v-autocomplete
+                  <v-text-field
+                    v-model="payload.customer_name"
+                    label="Customer Name"
+                    dense
+                    :hide-details="true"
+                  ></v-text-field>
+                  <!-- <v-autocomplete
                     @change="getRelatedCustomerInfo(payload.manager_id)"
                     v-model="payload.manager_id"
                     label="Select Customer"
@@ -185,7 +191,7 @@
                     item-value="id"
                     dense
                     :hide-details="true"
-                  ></v-autocomplete>
+                  ></v-autocomplete> -->
                   <!-- <br />
                   <v-text-field
                     v-model="payload.customer_email"
@@ -387,6 +393,7 @@ export default {
       let payload = {
         customer_name: this.payload.customer_name,
         customer_phone: this.payload.customer_phone,
+        customer_position: this.payload.customer_position,
         customer_sign: this.payload.customer_sign,
         customer_note: this.payload.customer_note,
         customer_signed_datetime: this.payload.customer_signed_datetime,
