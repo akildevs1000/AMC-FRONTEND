@@ -104,17 +104,25 @@ export default {
   auth: {
     strategies: {
       local: {
+
         endpoints: {
           login: { url: "technician/login", method: "post", propertyName: "token" },
           logout: false,
           user: { url: "technician/me", method: "get", propertyName: false },
         },
-        maxAge: 86400, // 24 hours
-      },
-    },
 
-    redirect: {
-      logout: "/login",
+        //maxAge: 86400, // 24 hours
+        refreshToken: true,
+
+        token: {
+          //property: "tokens.access.token",
+          global: true,
+          type: "Bearer",
+          maxAge: 60 * 60 * 24 * 365, // 8 Hours
+        },
+
+        autoLogout: false,
+      },
     },
   },
 
