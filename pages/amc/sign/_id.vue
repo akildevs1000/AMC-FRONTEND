@@ -389,7 +389,7 @@ export default {
       return number.toString().padStart(2, "0");
     },
     submit() {
-      this.loading = true;
+      // this.loading = true;
       let payload = {
         customer_name: this.payload.customer_name,
         customer_phone: this.payload.customer_phone,
@@ -397,8 +397,10 @@ export default {
         customer_sign: this.payload.customer_sign,
         customer_note: this.payload.customer_note,
         customer_signed_datetime: this.payload.customer_signed_datetime,
+
+        work_id: this.payload.work_id,
       };
-      this.loading = true;
+
       this.$axios
         .post(`/form_entry/customer_update/${this.form_entry_id}`, payload)
         .then(({ data }) => {
@@ -423,6 +425,8 @@ export default {
         .put(`/service_call/${this.form_entry_id}`, { status: "Completed" })
         .then(({ data }) => {
           this.errors = [];
+          alert("Checklist has been signed");
+          window.history.back();
           // this.sendWhatsapp();
         })
         .catch(({ response }) => this.handleErrorResponse(response));
